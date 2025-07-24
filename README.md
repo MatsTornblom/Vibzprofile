@@ -1,10 +1,10 @@
 # Vibz Developer Template
 
-A starter template for building applications in the Vibz ecosystem with consistent authentication, design, and database access.
+A starter template for building applications in the Vibz ecosystem with consistent design and database access that integrates with external Vibz authentication.
 
 ## Features
 
-- **Cross-Domain Authentication**: Cookie-based auth that works across all Vibz subdomains
+- **External Authentication Integration**: Seamlessly works with existing Vibz authentication system
 - **Consistent Design System**: Pre-configured Tailwind with Vibz design tokens
 - **Database Access**: Ready-to-use Supabase client and user services
 - **Mobile-First**: Responsive design optimized for mobile with desktop fallbacks
@@ -30,32 +30,24 @@ A starter template for building applications in the Vibz ecosystem with consiste
 
 ## Authentication
 
-The template uses a custom cookie-based authentication system that enables seamless login across all Vibz subdomains.
+The template integrates with the external Vibz authentication system. Users authenticate through the main Vibz platform, and this application reads the existing authentication state via cross-domain cookies.
 
 ### Key Components
 
-- `lib/auth/service.ts` - Authentication functions
 - `lib/services/userService.ts` - User profile management
-- `components/auth/AuthForm.tsx` - Login/signup form
 - `components/AccountButton.tsx` - User account display
 
 ### Usage
 
 ```tsx
-import { getCurrentUser, setCurrentUser } from './lib/services/userService';
-import { signInWithEmail, signUpWithEmail, signOut } from './lib/auth/service';
+import { getCurrentUser } from './lib/services/userService';
 
 // Get current user
 const user = await getCurrentUser();
 
-// Sign in
-const result = await signInWithEmail(email, password);
-
-// Sign up
-const result = await signUpWithEmail(email, password);
-
-// Sign out
-await signOut();
+// Authentication is handled externally at:
+// - https://check.vibz.world/ (for testing)
+// - https://enter.vibz.world/ (for account management)
 ```
 
 ## Database Access
@@ -127,7 +119,7 @@ Configured for Netlify deployment with:
 ## Development Guidelines
 
 1. **Mobile-First**: Design for mobile, enhance for desktop
-2. **Cross-Domain**: Always test authentication across subdomains
+2. **External Auth**: Authentication is handled by external Vibz services
 3. **Error Handling**: Use the provided error classes
 4. **Type Safety**: Leverage TypeScript throughout
 
@@ -139,7 +131,6 @@ src/
 ├── hooks/              # Custom React hooks
 ├── lib/
 │   ├── api/           # API clients and services
-│   ├── auth/          # Authentication logic
 │   ├── services/      # Business logic services
 │   └── types/         # TypeScript definitions
 └── styles/            # Global styles and design tokens
@@ -150,7 +141,7 @@ src/
 1. Customize the example page for your specific app
 2. Add your app-specific components and logic
 3. Configure your subdomain and deployment
-4. Test cross-domain authentication
+4. Test integration with external Vibz authentication
 
 ## Support
 

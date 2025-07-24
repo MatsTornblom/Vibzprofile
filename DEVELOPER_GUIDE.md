@@ -2,14 +2,14 @@
 
 ## Overview
 
-This template provides everything you need to build applications that integrate seamlessly with the Vibz ecosystem. All apps share the same authentication system and design language while running on different subdomains.
+This template provides everything you need to build applications that integrate seamlessly with the Vibz ecosystem. All apps share the same external authentication system and design language while running on different subdomains.
 
 ## Architecture
 
-### Cross-Domain Authentication
-- **Cookie-based sessions** work across all `*.vibz.world` subdomains
-- **Automatic session sharing** - users sign in once, access all apps
-- **Secure implementation** using Supabase Auth with custom storage
+### External Authentication Integration
+- **Cookie-based sessions** shared across all `*.vibz.world` subdomains
+- **External authentication** - users authenticate through dedicated Vibz services
+- **Session consumption** - apps read existing authentication state without managing auth
 
 ### Shared Database
 - **Single Supabase instance** shared across all applications
@@ -40,23 +40,21 @@ npm run dev
 
 ### 3. Test Authentication
 
-1. Click the "Account" button
-2. Sign up with email/password
+1. Visit https://check.vibz.world/ to authenticate
+2. Return to your app to see the authenticated state
 3. Verify the session works across subdomains
 
 ## Key Components
 
-### Authentication Flow
+### Authentication Integration
 
 ```tsx
 // Check if user is signed in
 const { user, loading } = useCurrentUser();
 
-// Sign in programmatically
-const result = await signInWithEmail(email, password);
-if (result.success) {
-  // User is now signed in across all subdomains
-}
+// Authentication is handled externally:
+// - https://check.vibz.world/ (testing)
+// - https://enter.vibz.world/ (account management)
 ```
 
 ### Database Queries
@@ -89,10 +87,10 @@ import { Button, Modal, LoadingSpinner } from './components/ui';
 - Use responsive breakpoints for desktop
 - Test on actual mobile devices
 
-### 2. Cross-Domain Testing
-- Test authentication across multiple subdomains
-- Verify session persistence
-- Check cookie domain settings
+### 2. External Authentication Testing
+- Test with existing authenticated sessions
+- Verify session reading across subdomains
+- Check cookie domain compatibility
 
 ### 3. Error Handling
 - Use the provided error classes
@@ -141,7 +139,7 @@ The template includes Netlify configuration for:
 
 1. Deploy your app to Netlify
 2. Configure custom domain: `yourapp.vibz.world`
-3. Test cross-domain authentication
+3. Test external authentication integration
 4. Coordinate with main team for DNS setup
 
 ## Common Patterns
@@ -153,7 +151,11 @@ function ProtectedPage() {
   const { user, loading } = useCurrentUser();
   
   if (loading) return <LoadingSpinner />;
-  if (!user) return <Navigate to="/account" />;
+  if (!user) {
+    // Redirect to external auth
+    window.location.href = 'https://check.vibz.world/';
+    return null;
+  }
   
   return <YourContent />;
 }
@@ -185,7 +187,7 @@ try {
 
 ## Best Practices
 
-1. **Always test authentication** across subdomains
+1. **Test external authentication** integration across subdomains
 2. **Use TypeScript** for type safety
 3. **Handle loading states** gracefully
 4. **Provide error feedback** to users
