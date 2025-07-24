@@ -64,7 +64,7 @@ export function AccountPage() {
             <div className="flex justify-center">
               <Button 
                 variant="secondary" 
-                onClick={() => window.open('https://entervibz.world/', '_blank')}
+                onClick={() => window.open('https://vibz.world/account', '_blank')}
               >
                 <ExternalLink size={16} />
                 Manage Account
@@ -82,10 +82,10 @@ export function AccountPage() {
               
               <Button 
                 variant="primary" 
-                onClick={() => window.open('https://check.vibz.world/', '_blank')}
+                onClick={() => window.open('https://vibz.world/account', '_blank')}
               >
                 <ExternalLink size={16} />
-                Test Authentication
+                Sign In at Vibz.world
               </Button>
             </div>
           </div>
