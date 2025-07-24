@@ -77,7 +77,7 @@ export function HomePage() {
             Start building your Vibz application!
           </p>
           <div className="flex gap-4 justify-center">
-            <Button variant="primary" onClick={() => window.open('/account', '_blank')}>
+            <Button variant="primary" onClick={() => window.open('https://check.vibz.world/', '_blank')}>
               Test Authentication
             </Button>
             <Button variant="secondary" onClick={() => window.open('https://github.com/MatsTornblom/VibzWorldTemplate', '_blank')}>
