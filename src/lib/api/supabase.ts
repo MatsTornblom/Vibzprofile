@@ -13,9 +13,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const cookieStorage = {
   getItem: (key: string) => {
     const value = Cookies.get(key);
+    console.log('Getting cookie:', key, value ? 'found' : 'not found');
     return value ?? null;
   },
   setItem: (key: string, value: string) => {
+    console.log('Setting cookie:', key);
     Cookies.set(key, value, {
       domain: '.' + window.location.hostname.split('.').slice(-2).join('.'),
       sameSite: 'lax',
@@ -24,6 +26,7 @@ const cookieStorage = {
     });
   },
   removeItem: (key: string) => {
+    console.log('Removing cookie:', key);
     Cookies.remove(key, {
       domain: '.' + window.location.hostname.split('.').slice(-2).join('.'),
       sameSite: 'lax',
@@ -44,6 +47,7 @@ export const supabase = createClient(
       detectSessionInUrl: false,
       storage: cookieStorage,
       flowType: 'pkce',
+      debug: true,
     }
   }
 );

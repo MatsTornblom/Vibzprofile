@@ -3,19 +3,42 @@ import type { UserProfile } from '../types/user';
 
 export async function getCurrentUser(): Promise<UserProfile | null> {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
+    // First get the current session
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError) {
+      console.error('Session error in getCurrentUser:', sessionError);
+      return null;
+    }
+
+    if (!session?.user) {
+      return null;
+    }
+
+    // Use the session user instead of getUser() which might fail with cookies
+    const user = session.user;
 
     // Get user profile from database
     const { data: profile, error } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (error || !profile) {
+    if (error) {
       console.error('Failed to get user profile:', error);
+      // If profile doesn't exist, try to create one
+      if (error.code === 'PGRST116') {
+        console.log('User profile not found, creating new profile...');
+        return await createNewUser();
+      }
       return null;
+    }
+
+    if (!profile) {
+      // Profile doesn't exist, create one
+      console.log('No user profile found, creating new profile...');
+      return await createNewUser();
     }
 
     return profile;

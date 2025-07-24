@@ -9,6 +9,23 @@ export function useCurrentUser() {
 
   const loadUser = async () => {
     try {
+      // First check if we have a session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      if (!session) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // If we have a session, try to get the user profile
       const currentUser = await getCurrentUser();
       setUser(currentUser);
     } catch (error) {
@@ -30,6 +47,7 @@ export function useCurrentUser() {
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           await loadUser();
         } else if (event === 'SIGNED_OUT') {
