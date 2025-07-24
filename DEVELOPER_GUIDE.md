@@ -1,5 +1,16 @@
 # Vibz Developer Guide
 
+## Creating Your Project
+
+This is a GitHub template repository. To start a new project:
+
+1. **Click "Use this template"** on the GitHub repository page
+2. **Create a new repository** with your project name
+3. **Clone your new repository** (not this template)
+4. **Follow the setup instructions** below
+
+> **Note**: Don't fork this repository - use the template feature to get a clean copy without commit history.
+
 ## Overview
 
 This template provides everything you need to build applications that integrate seamlessly with the Vibz ecosystem. All apps share the same external authentication system and design language while running on different subdomains.

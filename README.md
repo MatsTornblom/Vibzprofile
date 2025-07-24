@@ -1,6 +1,12 @@
 # Vibz Developer Template
 
-A starter template for building applications in the Vibz ecosystem with consistent design and database access that integrates with external Vibz authentication.
+A GitHub template for building applications in the Vibz ecosystem with consistent design and database access that integrates with external Vibz authentication.
+
+## Using This Template
+
+1. **Create a new repository** from this template by clicking the green "Use this template" button
+2. **Clone your new repository** to your local machine
+3. **Follow the Quick Start** instructions below
 
 ## Features
 
