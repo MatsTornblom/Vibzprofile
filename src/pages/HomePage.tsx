@@ -80,8 +80,8 @@ export function HomePage() {
             <Button variant="primary" onClick={() => window.open('/account', '_blank')}>
               Test Authentication
             </Button>
-            <Button variant="secondary" onClick={() => window.open('https://github.com/your-repo', '_blank')}>
-              View Documentation
+            <Button variant="secondary" onClick={() => window.open('https://github.com/MatsTornblom/VibzWorldTemplate', '_blank')}>
+              View Template in GitHub
             </Button>
           </div>
         </div>
