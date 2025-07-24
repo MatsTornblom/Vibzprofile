@@ -1,32 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowLeft, User, Mail, Calendar } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { AuthForm } from '../components/auth/AuthForm';
 import { Button } from '../components/ui/Button';
-import { Modal } from '../components/ui/Modal';
 import { useCurrentUser } from '../hooks/useCurrentUser';
-import { signOut } from '../lib/auth/service';
 
 export function AccountPage() {
   const navigate = useNavigate();
-  const { user, loading, refreshUser } = useCurrentUser();
-  const [showAuthForm, setShowAuthForm] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-
-  const handleAuthSuccess = () => {
-    setShowAuthForm(false);
-    setAuthError(null);
-    refreshUser();
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      refreshUser();
-    } catch (error) {
-      console.error('Sign out failed:', error);
-    }
-  };
+  const { user, loading } = useCurrentUser();
 
   if (loading) {
     return (
@@ -82,8 +62,12 @@ export function AccountPage() {
             </div>
 
             <div className="flex justify-center">
-              <Button variant="secondary" onClick={handleSignOut}>
-                Sign Out
+              <Button 
+                variant="secondary" 
+                onClick={() => window.open('https://vibz.world/account', '_blank')}
+              >
+                <ExternalLink size={16} />
+                Manage Account
               </Button>
             </div>
           </div>
@@ -93,31 +77,19 @@ export function AccountPage() {
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
               <h2 className="text-xl font-semibold mb-4">Welcome to Vibz</h2>
               <p className="text-white/60 mb-6">
-                Sign in to access your account and sync across all Vibz applications
+                You need to be signed in to access this application
               </p>
               
-              <Button variant="primary" onClick={() => setShowAuthForm(true)}>
-                Sign In / Sign Up
+              <Button 
+                variant="primary" 
+                onClick={() => window.open('https://vibz.world/account', '_blank')}
+              >
+                <ExternalLink size={16} />
+                Sign In at Vibz.world
               </Button>
             </div>
           </div>
         )}
-
-        {/* Auth Modal */}
-        <Modal isOpen={showAuthForm} onClose={() => setShowAuthForm(false)}>
-          <div className="p-6">
-            <h2 className="text-xl font-semibold mb-6">Authentication</h2>
-            <AuthForm
-              onSuccess={handleAuthSuccess}
-              onError={setAuthError}
-            />
-            {authError && (
-              <div className="mt-4 bg-red-500/10 text-red-500 px-4 py-2 rounded-lg">
-                {authError}
-              </div>
-            )}
-          </div>
-        </Modal>
       </div>
     </div>
   );

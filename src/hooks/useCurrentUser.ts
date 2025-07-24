@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCurrentUser } from '../lib/services/userService';
+import { getCurrentUser, clearStoredUserId } from '../lib/services/userService';
 import { supabase } from '../lib/api/supabase';
 import type { UserProfile } from '../lib/types/user';
 
@@ -8,29 +8,16 @@ export function useCurrentUser() {
   const [loading, setLoading] = useState(true);
 
   const loadUser = async () => {
+    setLoading(true);
     try {
-      // First check if we have a session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) {
-        console.error('Session error:', sessionError);
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      if (!session) {
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      // If we have a session, try to get the user profile
+      // Simply try to get the current user - let the service handle session logic
       const currentUser = await getCurrentUser();
       setUser(currentUser);
     } catch (error) {
       console.error('Failed to load user:', error);
       setUser(null);
+      // Clear any stored data on error
+      clearStoredUserId();
     } finally {
       setLoading(false);
     }
@@ -44,24 +31,10 @@ export function useCurrentUser() {
   useEffect(() => {
     loadUser();
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.id);
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          await loadUser();
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setLoading(false);
-        }
-      }
-    );
-
     // Listen for user updates
     window.addEventListener('userUpdated', loadUser);
 
     return () => {
-      subscription.unsubscribe();
       window.removeEventListener('userUpdated', loadUser);
     };
   }, []);

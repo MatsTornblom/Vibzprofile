@@ -3,20 +3,20 @@ import type { UserProfile } from '../types/user';
 
 export async function getCurrentUser(): Promise<UserProfile | null> {
   try {
-    // First get the current session
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    // Try to get the current user from the session
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
     
-    if (sessionError) {
-      console.error('Session error in getCurrentUser:', sessionError);
+    if (userError) {
+      console.log('No authenticated user found:', userError.message);
       return null;
     }
 
-    if (!session?.user) {
+    if (!user) {
+      console.log('No user in session');
       return null;
     }
 
-    // Use the session user instead of getUser() which might fail with cookies
-    const user = session.user;
+    console.log('Found authenticated user:', user.id);
 
     // Get user profile from database
     const { data: profile, error } = await supabase
@@ -27,20 +27,15 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 
     if (error) {
       console.error('Failed to get user profile:', error);
-      // If profile doesn't exist, try to create one
-      if (error.code === 'PGRST116') {
-        console.log('User profile not found, creating new profile...');
-        return await createNewUser();
-      }
       return null;
     }
 
     if (!profile) {
-      // Profile doesn't exist, create one
-      console.log('No user profile found, creating new profile...');
-      return await createNewUser();
+      console.log('No user profile found in database for user:', user.id);
+      return null;
     }
 
+    console.log('Successfully loaded user profile:', profile.username || profile.id);
     return profile;
   } catch (error) {
     console.error('Failed to get user:', error);
@@ -48,67 +43,8 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
   }
 }
 
-export async function setCurrentUser(username: string): Promise<UserProfile | null> {
-  try {
-    if (!username.trim()) {
-      throw new Error('Username is required');
-    }
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-
-    const { data: profile, error } = await supabase
-      .from('users')
-      .update({ 
-        username,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', user.id)
-      .select()
-      .single();
-
-    if (error || !profile) {
-      throw error || new Error('Failed to update user profile');
-    }
-
-    window.dispatchEvent(new Event('userUpdated'));
-    return profile;
-  } catch (error) {
-    console.error('Failed to set current user:', error);
-    throw error;
-  }
-}
-
-export async function createNewUser(username?: string): Promise<UserProfile | null> {
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-
-    const { data: profile, error } = await supabase
-      .from('users')
-      .insert([{
-        id: user.id,
-        email: user.email,
-        username: username || null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }])
-      .select()
-      .single();
-
-    if (error || !profile) {
-      console.error('Failed to create user profile:', error);
-      return null;
-    }
-
-    return profile;
-  } catch (error) {
-    console.error('Failed to create user:', error);
-    return null;
-  }
-}
-
-// Legacy function - kept for compatibility
+// Clear any stored user data
 export function clearStoredUserId(): void {
-  // No-op since we use database-based user management
+  // Clear any local storage or cached data if needed
+  localStorage.removeItem('user_id');
 }
