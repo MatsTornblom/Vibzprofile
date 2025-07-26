@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { isMetaBrowser } from '../lib/browser';
 
-export function useFullscreen(autoTrigger = false) {
+export function useFullscreen() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const isMeta = isMetaBrowser();
 
@@ -29,34 +29,37 @@ export function useFullscreen(autoTrigger = false) {
       setIsFullscreen(isInFullscreen);
     };
 
-    // Auto-trigger fullscreen on user interaction
+    // Auto-trigger fullscreen on ANY user interaction
     const handleUserInteraction = () => {
-      if (autoTrigger && !document.fullscreenElement && !isMeta) {
+      if (!document.fullscreenElement && !isMeta) {
         toggleFullscreen();
         // Remove listeners after first interaction
         document.removeEventListener('click', handleUserInteraction);
         document.removeEventListener('touchstart', handleUserInteraction);
         document.removeEventListener('keydown', handleUserInteraction);
+        document.removeEventListener('mousemove', handleUserInteraction);
+        document.removeEventListener('scroll', handleUserInteraction);
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     
-    if (autoTrigger) {
-      document.addEventListener('click', handleUserInteraction);
-      document.addEventListener('touchstart', handleUserInteraction);
-      document.addEventListener('keydown', handleUserInteraction);
-    }
+    // Listen for ANY user interaction
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener('mousemove', handleUserInteraction);
+    document.addEventListener('scroll', handleUserInteraction);
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      if (autoTrigger) {
-        document.removeEventListener('click', handleUserInteraction);
-        document.removeEventListener('touchstart', handleUserInteraction);
-        document.removeEventListener('keydown', handleUserInteraction);
-      }
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('mousemove', handleUserInteraction);
+      document.removeEventListener('scroll', handleUserInteraction);
     };
-  }, [isMeta, autoTrigger, toggleFullscreen]);
+  }, [isMeta, toggleFullscreen]);
 
   return { isFullscreen, toggleFullscreen };
 }

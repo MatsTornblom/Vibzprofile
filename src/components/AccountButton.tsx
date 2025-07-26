@@ -3,12 +3,10 @@ import { UserCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../lib/services/userService';
 import type { UserProfile } from '../lib/types/user';
-import { useFullscreen } from '../hooks/useFullscreen';
 
 export function AccountButton() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
-  const { toggleFullscreen } = useFullscreen();
 
   const loadUser = async () => {
     const currentUser = await getCurrentUser();
@@ -26,8 +24,6 @@ export function AccountButton() {
   }, []);
 
   const handleClick = () => {
-    // Trigger fullscreen on account button click
-    toggleFullscreen();
     navigate('/account');
   };
 

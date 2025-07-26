@@ -11,7 +11,7 @@ A GitHub template for building applications in the Vibz ecosystem with consisten
 ## Features
 
 - **External Authentication Integration**: Seamlessly works with existing Vibz authentication system
-- **Fullscreen Mode**: Automatically enters fullscreen mode on user interaction for immersive experience
+- **Fullscreen Mode**: Automatically enters fullscreen mode on ANY user interaction (click, touch, scroll, mouse movement, keyboard) for immersive experience
 - **Consistent Design System**: Pre-configured Tailwind with Vibz design tokens
 - **Database Access**: Ready-to-use Supabase client and user services
 - **Mobile-First**: Responsive design optimized for mobile with desktop fallbacks

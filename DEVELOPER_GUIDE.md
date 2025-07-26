@@ -29,7 +29,7 @@ This template provides everything you need to build applications that integrate 
 
 ### Design System
 - **Mobile-first** responsive design
-- **Fullscreen experience** - automatically enters fullscreen on user interaction
+- **Fullscreen experience** - automatically enters fullscreen on ANY user interaction (click, touch, scroll, mouse movement, keyboard)
 - **Consistent styling** using Tailwind CSS
 - **Vibz brand colors** and typography
 
