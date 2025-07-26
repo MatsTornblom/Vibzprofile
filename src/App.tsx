@@ -9,7 +9,9 @@ import { useFullscreen } from './hooks/useFullscreen';
 
 export default function App() {
   const { user, loading } = useCurrentUser();
-  useFullscreen(); // Auto-trigger fullscreen on any interaction
+  const { isFullscreen } = useFullscreen(); // Auto-trigger fullscreen on any interaction
+  
+  console.log('App rendered, fullscreen state:', isFullscreen);
 
   if (loading) {
     return (

@@ -3,12 +3,17 @@ import { isMetaBrowser } from '../lib/browser';
 
 export function useFullscreen() {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
   const isMeta = isMetaBrowser();
 
-  const toggleFullscreen = useCallback(async () => {
-    // Skip fullscreen for Meta browsers
+  const enterFullscreen = useCallback(async () => {
     if (isMeta) {
       console.log('Skipping fullscreen for Meta browser');
+      return;
+    }
+
+    if (hasTriggered) {
+      console.log('Fullscreen already triggered once');
       return;
     }
 
@@ -16,47 +21,44 @@ export function useFullscreen() {
       if (!document.fullscreenElement) {
         console.log('Requesting fullscreen...');
         await document.documentElement.requestFullscreen();
-        setIsFullscreen(true);
+        setHasTriggered(true);
         console.log('Fullscreen requested successfully');
       }
     } catch (err) {
-      // Silently handle fullscreen errors - don't disrupt user experience
       console.log('Fullscreen request failed:', err);
     }
-  }, [isMeta]);
+  }, [isMeta, hasTriggered]);
 
   useEffect(() => {
+    console.log('Setting up fullscreen hook...');
+    
     // Handle fullscreen change events
     const handleFullscreenChange = () => {
       const isInFullscreen = !!document.fullscreenElement;
       setIsFullscreen(isInFullscreen);
+      console.log('Fullscreen state changed:', isInFullscreen);
     };
 
     // Auto-trigger fullscreen on ANY user interaction
-    const handleUserInteraction = () => {
-      console.log('User interaction detected, attempting fullscreen...');
-      if (!document.fullscreenElement && !isMeta) {
-        toggleFullscreen();
-        // Remove listeners after first interaction
-        document.removeEventListener('click', handleUserInteraction);
-        document.removeEventListener('touchstart', handleUserInteraction);
-        document.removeEventListener('keydown', handleUserInteraction);
-        document.removeEventListener('mousemove', handleUserInteraction);
-        document.removeEventListener('scroll', handleUserInteraction);
-      }
+    const handleUserInteraction = (event: Event) => {
+      console.log('User interaction detected:', event.type);
+      enterFullscreen();
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     
-    // Listen for ANY user interaction
-    console.log('Setting up fullscreen event listeners...');
-    document.addEventListener('click', handleUserInteraction);
-    document.addEventListener('touchstart', handleUserInteraction);
-    document.addEventListener('keydown', handleUserInteraction);
-    document.addEventListener('mousemove', handleUserInteraction);
-    document.addEventListener('scroll', handleUserInteraction);
+    // Only add interaction listeners if not already triggered and not Meta browser
+    if (!hasTriggered && !isMeta) {
+      console.log('Adding interaction listeners...');
+      document.addEventListener('click', handleUserInteraction, { once: true });
+      document.addEventListener('touchstart', handleUserInteraction, { once: true });
+      document.addEventListener('keydown', handleUserInteraction, { once: true });
+      document.addEventListener('mousemove', handleUserInteraction, { once: true });
+      document.addEventListener('scroll', handleUserInteraction, { once: true });
+    }
 
     return () => {
+      console.log('Cleaning up fullscreen listeners...');
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('click', handleUserInteraction);
       document.removeEventListener('touchstart', handleUserInteraction);
@@ -64,7 +66,21 @@ export function useFullscreen() {
       document.removeEventListener('mousemove', handleUserInteraction);
       document.removeEventListener('scroll', handleUserInteraction);
     };
-  }, [isMeta, toggleFullscreen]);
+  }, [enterFullscreen, hasTriggered, isMeta]);
 
-  return { isFullscreen, toggleFullscreen };
+  const toggleFullscreen = useCallback(async () => {
+    if (isMeta) return;
+
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (err) {
+      console.log('Fullscreen toggle failed:', err);
+    }
+  }, [isMeta]);
+
+  return { isFullscreen, toggleFullscreen, enterFullscreen };
 }
