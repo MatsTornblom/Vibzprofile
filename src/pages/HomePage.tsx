@@ -40,9 +40,12 @@ export function HomePage() {
           ) : (
             <div className="space-y-2">
               <p className="text-white/60">Not signed in</p>
-              <p className="text-sm text-white/40">
-                Click the account button to sign in
-              </p>
+              <Button 
+                variant="primary" 
+                onClick={() => window.open('https://enter.vibz.world/', '_blank')}
+              >
+                Sign in/Sign up
+              </Button>
             </div>
           )}
         </div>
