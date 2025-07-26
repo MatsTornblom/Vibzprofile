@@ -174,6 +174,21 @@ Create:
 The fullscreen should trigger automatically - users shouldn't need to click a button. It should work on mobile and desktop, and handle browser compatibility issues.
 ```
 
+## Bolt.new Prompt
+
+If you want to use Bolt.new to implement this, use this prompt:
+
+```
+Add automatic fullscreen functionality to this React app. The app should automatically enter fullscreen mode on any user interaction (click, touch, keypress) and re-enter fullscreen if the user exits with Escape key. Skip fullscreen for Meta browsers (Facebook, Instagram). 
+
+Create:
+1. A browser detection utility in src/lib/browser.ts that detects Meta browsers
+2. A useFullscreen hook in src/hooks/useFullscreen.ts that handles the fullscreen logic
+3. Integrate the hook in the main App component
+
+The fullscreen should trigger automatically - users shouldn't need to click a button. It should work on mobile and desktop, and handle browser compatibility issues.
+```
+
 ## Testing
 
 After implementation:
