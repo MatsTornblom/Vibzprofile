@@ -201,6 +201,7 @@ try {
 ## Best Practices
 
 1. **Test external authentication** integration across subdomains
+2. **Embrace fullscreen mode** - design your UI assuming fullscreen experience
 2. **Use TypeScript** for type safety
 3. **Handle loading states** gracefully
 4. **Provide error feedback** to users
