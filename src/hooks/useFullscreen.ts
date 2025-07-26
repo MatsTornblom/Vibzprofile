@@ -8,17 +8,20 @@ export function useFullscreen() {
   const toggleFullscreen = useCallback(async () => {
     // Skip fullscreen for Meta browsers
     if (isMeta) {
+      console.log('Skipping fullscreen for Meta browser');
       return;
     }
 
     try {
       if (!document.fullscreenElement) {
+        console.log('Requesting fullscreen...');
         await document.documentElement.requestFullscreen();
         setIsFullscreen(true);
+        console.log('Fullscreen requested successfully');
       }
     } catch (err) {
       // Silently handle fullscreen errors - don't disrupt user experience
-      console.debug('Fullscreen request failed:', err);
+      console.log('Fullscreen request failed:', err);
     }
   }, [isMeta]);
 
@@ -31,6 +34,7 @@ export function useFullscreen() {
 
     // Auto-trigger fullscreen on ANY user interaction
     const handleUserInteraction = () => {
+      console.log('User interaction detected, attempting fullscreen...');
       if (!document.fullscreenElement && !isMeta) {
         toggleFullscreen();
         // Remove listeners after first interaction
@@ -45,6 +49,7 @@ export function useFullscreen() {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     
     // Listen for ANY user interaction
+    console.log('Setting up fullscreen event listeners...');
     document.addEventListener('click', handleUserInteraction);
     document.addEventListener('touchstart', handleUserInteraction);
     document.addEventListener('keydown', handleUserInteraction);
