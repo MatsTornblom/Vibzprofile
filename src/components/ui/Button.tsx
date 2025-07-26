@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import { useFullscreen } from '../../hooks/useFullscreen';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger';
@@ -17,6 +18,8 @@ export function Button({
   className = '',
   ...props 
 }: ButtonProps) {
+  const { toggleFullscreen } = useFullscreen();
+
   const baseClasses = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantClasses = {
@@ -31,10 +34,20 @@ export function Button({
     lg: 'px-6 py-3 text-lg'
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Trigger fullscreen on button click
+    toggleFullscreen();
+    // Call original onClick if provided
+    if (props.onClick) {
+      props.onClick(e);
+    }
+  };
+
   return (
     <button
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       disabled={disabled || loading}
+      onClick={handleClick}
       {...props}
     >
       {loading && <Loader2 size={16} className="animate-spin" />}

@@ -11,6 +11,7 @@ A GitHub template for building applications in the Vibz ecosystem with consisten
 ## Features
 
 - **External Authentication Integration**: Seamlessly works with existing Vibz authentication system
+- **Fullscreen Mode**: Automatically enters fullscreen mode on user interaction for immersive experience
 - **Consistent Design System**: Pre-configured Tailwind with Vibz design tokens
 - **Database Access**: Ready-to-use Supabase client and user services
 - **Mobile-First**: Responsive design optimized for mobile with desktop fallbacks
@@ -89,6 +90,7 @@ Consistent design components following Vibz design system.
 ### Available Components
 
 - `Button` - Standard button with Vibz styling
+- `useFullscreen` - Hook for managing fullscreen mode with auto-trigger functionality
 - `Modal` - Backdrop modal with consistent styling
 - `LoadingSpinner` - Animated loading indicator
 - `ErrorMessage` - Error display component
@@ -104,7 +106,7 @@ Consistent design components following Vibz design system.
 
 Useful React hooks for common functionality.
 
-- `useFullscreen` - Fullscreen management with browser detection
+- `useFullscreen` - Fullscreen management with browser detection and auto-trigger on user interaction
 - `useCurrentUser` - User state management
 - `useVersionCheck` - Version checking and cache busting
 

@@ -29,6 +29,7 @@ This template provides everything you need to build applications that integrate 
 
 ### Design System
 - **Mobile-first** responsive design
+- **Fullscreen experience** - automatically enters fullscreen on user interaction
 - **Consistent styling** using Tailwind CSS
 - **Vibz brand colors** and typography
 
@@ -95,6 +96,7 @@ import { Button, Modal, LoadingSpinner } from './components/ui';
 
 ### 1. Mobile-First Design
 - Design for mobile screens first
+- Leverage fullscreen mode for immersive experience
 - Use responsive breakpoints for desktop
 - Test on actual mobile devices
 

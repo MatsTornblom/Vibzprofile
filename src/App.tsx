@@ -5,9 +5,11 @@ import { AccountPage } from './pages/AccountPage';
 import { VersionChecker } from './components/VersionChecker';
 import { AccountButton } from './components/AccountButton';
 import { useCurrentUser } from './hooks/useCurrentUser';
+import { useFullscreen } from './hooks/useFullscreen';
 
 export default function App() {
   const { user, loading } = useCurrentUser();
+  const { isFullscreen } = useFullscreen(true); // Auto-trigger fullscreen on interaction
 
   if (loading) {
     return (
