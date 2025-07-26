@@ -11,11 +11,26 @@ A GitHub template for building applications in the Vibz ecosystem with consisten
 ## Features
 
 - **External Authentication Integration**: Seamlessly works with existing Vibz authentication system
-- **Fullscreen Mode**: Automatically enters fullscreen mode on ANY user interaction (click, touch, scroll, mouse movement, keyboard) for immersive experience
+- **Automatic Fullscreen Mode**: Automatically enters fullscreen mode on ANY user interaction (click, touch, keypress) for immersive experience - all Vibz apps should run in fullscreen
 - **Consistent Design System**: Pre-configured Tailwind with Vibz design tokens
 - **Database Access**: Ready-to-use Supabase client and user services
 - **Mobile-First**: Responsive design optimized for mobile with desktop fallbacks
 - **Version Management**: Built-in version checking and cache busting
+
+## Fullscreen Philosophy
+
+All Vibz ecosystem applications are designed to provide an **immersive, fullscreen experience**. This creates a more engaging, app-like feel that distinguishes Vibz applications from traditional websites.
+
+### How It Works
+
+- **Automatic Trigger**: As soon as a user interacts with the app (clicks, touches, or presses a key), it automatically enters fullscreen mode
+- **Re-triggering**: If the user exits fullscreen (e.g., pressing Escape), the next interaction will re-enter fullscreen mode
+- **Browser Compatibility**: Automatically detects and skips fullscreen for Meta browsers (Facebook, Instagram) where it's not supported
+- **User Gesture Compliance**: Only triggers on valid user gestures to comply with browser security requirements
+
+### Implementation
+
+The fullscreen functionality is built into the template via the `useFullscreen` hook and is automatically active in all apps. No additional setup required.
 
 ## Quick Start
 
