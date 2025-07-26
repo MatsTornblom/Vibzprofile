@@ -12,11 +12,6 @@ export function useFullscreen() {
       return;
     }
 
-    if (hasTriggered) {
-      console.log('Fullscreen already triggered once');
-      return;
-    }
-
     try {
       if (!document.fullscreenElement) {
         console.log('Requesting fullscreen...');
@@ -27,7 +22,7 @@ export function useFullscreen() {
     } catch (err) {
       console.log('Fullscreen request failed:', err);
     }
-  }, [isMeta, hasTriggered]);
+  }, [isMeta]);
 
   useEffect(() => {
     console.log('Setting up fullscreen hook...');
@@ -37,9 +32,15 @@ export function useFullscreen() {
       const isInFullscreen = !!document.fullscreenElement;
       setIsFullscreen(isInFullscreen);
       console.log('Fullscreen state changed:', isInFullscreen);
+      
+      // Reset hasTriggered when user exits fullscreen so we can re-trigger
+      if (!isInFullscreen) {
+        console.log('Resetting hasTriggered - user exited fullscreen');
+        setHasTriggered(false);
+      }
     };
 
-    // Auto-trigger fullscreen on ANY user interaction
+    // Auto-trigger fullscreen on valid user interactions (not mousemove)
     const handleUserInteraction = (event: Event) => {
       console.log('User interaction detected:', event.type);
       enterFullscreen();
@@ -50,11 +51,11 @@ export function useFullscreen() {
     // Only add interaction listeners if not already triggered and not Meta browser
     if (!hasTriggered && !isMeta) {
       console.log('Adding interaction listeners...');
+      // Only use interactions that count as "user gestures" for fullscreen API
       document.addEventListener('click', handleUserInteraction, { once: true });
       document.addEventListener('touchstart', handleUserInteraction, { once: true });
       document.addEventListener('keydown', handleUserInteraction, { once: true });
-      document.addEventListener('mousemove', handleUserInteraction, { once: true });
-      document.addEventListener('scroll', handleUserInteraction, { once: true });
+      // Remove mousemove and scroll as they don't count as user gestures
     }
 
     return () => {
@@ -63,8 +64,6 @@ export function useFullscreen() {
       document.removeEventListener('click', handleUserInteraction);
       document.removeEventListener('touchstart', handleUserInteraction);
       document.removeEventListener('keydown', handleUserInteraction);
-      document.removeEventListener('mousemove', handleUserInteraction);
-      document.removeEventListener('scroll', handleUserInteraction);
     };
   }, [enterFullscreen, hasTriggered, isMeta]);
 
