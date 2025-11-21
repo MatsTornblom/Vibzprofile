@@ -55,18 +55,6 @@ export function HomePage() {
               )}
               
               <div className="space-y-2 text-center">
-              {/* Profile Picture */}
-              {user.profile_image_url && (
-                <div className="flex justify-center">
-                  <img 
-                    src={user.profile_image_url} 
-                    alt={user.username || 'User profile'}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-pink-500/30"
-                  />
-                </div>
-              )}
-              
-              <div className="space-y-2 text-center">
               <p className="text-white/60">Welcome back!</p>
               <p className="text-lg font-medium">
                 {user.username || 'Anonymous User'}
@@ -74,7 +62,6 @@ export function HomePage() {
               <p className="text-sm text-white/40">
                 User ID: {user.id}
               </p>
-              </div>
               </div>
             </div>
           ) : (
