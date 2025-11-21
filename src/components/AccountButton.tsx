@@ -34,7 +34,15 @@ export function AccountButton() {
         bg-white/10 backdrop-blur-sm rounded-lg text-white 
         hover:text-pink-500 transition-colors"
     >
-      <UserCircle size={20} />
+      {user?.profile_image_url ? (
+        <img 
+          src={user.profile_image_url} 
+          alt={user.username || 'User'}
+          className="w-5 h-5 rounded-full object-cover"
+        />
+      ) : (
+        <UserCircle size={20} />
+      )}
       <span className="text-sm">
         {user?.username || 'Account'}
       </span>
