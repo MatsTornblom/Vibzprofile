@@ -5,30 +5,38 @@ import { useCurrentUser } from '../hooks/useCurrentUser';
 
 export function HomePage() {
   const { user, loading } = useCurrentUser();
+  const isDevMode = import.meta.env.VITE_DEV_MODE === 'true';
 
-  // Auto-redirect to login if not authenticated
+  // Auto-redirect to login if not authenticated (skip in dev mode)
   React.useEffect(() => {
-    if (!loading && !user) {
+    if (!isDevMode && !loading && !user) {
       const returnUrl = encodeURIComponent(window.location.href);
       const authUrl = `https://enter.vibz.world/?returnUrl=${returnUrl}`;
       window.location.href = authUrl;
     }
-  }, [user, loading]);
+  }, [user, loading, isDevMode]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto text-center space-y-8">
+        {/* Development Mode Indicator */}
+        {isDevMode && (
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-yellow-300 text-sm">
+            🔧 Development Mode Active
+          </div>
+        )}
+
         {/* Hero Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Heart className="text-pink-500" size={32} fill="currentColor" />
             <Sparkles className="text-yellow-400" size={24} />
           </div>
-          
+
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
             Vibz Template
           </h1>
-          
+
           <p className="text-xl text-white/80 max-w-lg mx-auto">
             A starter template for building applications in the Vibz ecosystem
           </p>

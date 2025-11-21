@@ -1,11 +1,38 @@
 import { supabase } from '../api/supabase';
 import type { UserProfile } from '../types/user';
 
+const isDevMode = import.meta.env.VITE_DEV_MODE === 'true';
+const devUserId = import.meta.env.VITE_DEV_USER_ID;
+
 export async function getCurrentUser(): Promise<UserProfile | null> {
   try {
-    // Try to get the current user from the session
+    // Development mode: bypass authentication and use configured dev user ID
+    if (isDevMode && devUserId) {
+      console.log('🔧 DEV MODE: Loading user profile for dev user:', devUserId);
+
+      const { data: profile, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', devUserId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Failed to get dev user profile:', error);
+        return null;
+      }
+
+      if (!profile) {
+        console.warn('No user profile found in database for dev user:', devUserId);
+        return null;
+      }
+
+      console.log('✅ DEV MODE: Successfully loaded user profile:', profile.username || profile.id);
+      return profile;
+    }
+
+    // Production mode: use normal authentication flow
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
+
     if (userError) {
       console.log('No authenticated user found:', userError.message);
       return null;
