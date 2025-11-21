@@ -2,10 +2,11 @@ import React from 'react';
 import { Heart, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useCurrentUser } from '../hooks/useCurrentUser';
+import { isDevEnvironment } from '../lib/browser';
 
 export function HomePage() {
   const { user, loading } = useCurrentUser();
-  const isDevMode = import.meta.env.VITE_DEV_MODE === 'true';
+  const isDevMode = isDevEnvironment();
 
   // Auto-redirect to login if not authenticated (skip in dev mode)
   React.useEffect(() => {

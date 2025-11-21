@@ -1,11 +1,12 @@
 import { supabase } from '../api/supabase';
 import type { UserProfile } from '../types/user';
-
-const isDevMode = import.meta.env.VITE_DEV_MODE === 'true';
-const devUserId = import.meta.env.VITE_DEV_USER_ID;
+import { isDevEnvironment, getDevUserId } from '../browser';
 
 export async function getCurrentUser(): Promise<UserProfile | null> {
   try {
+    const isDevMode = isDevEnvironment();
+    const devUserId = getDevUserId();
+
     // Development mode: bypass authentication and use configured dev user ID
     if (isDevMode && devUserId) {
       console.log('🔧 DEV MODE: Loading user profile for dev user:', devUserId);
