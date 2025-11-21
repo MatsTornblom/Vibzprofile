@@ -4,21 +4,16 @@ import { Button } from '../components/ui/Button';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 
 export function HomePage() {
-  const { user } = useCurrentUser();
+  const { user, loading } = useCurrentUser();
 
-  const handleAuthenticateAndRedirect = () => {
-    if (user) {
-      alert('You are already authenticated!');
-      return;
+  // Auto-redirect to login if not authenticated
+  React.useEffect(() => {
+    if (!loading && !user) {
+      const returnUrl = encodeURIComponent(window.location.href);
+      const authUrl = `https://enter.vibz.world/?returnUrl=${returnUrl}`;
+      window.location.href = authUrl;
     }
-    
-    // Build the return URL (current page)
-    const returnUrl = encodeURIComponent(window.location.href);
-    const authUrl = `https://enter.vibz.world/?returnUrl=${returnUrl}`;
-    
-    // Redirect to authentication (same tab)
-    window.location.href = authUrl;
-  };
+  }, [user, loading]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -107,9 +102,6 @@ export function HomePage() {
             Start building your Vibz application!
           </p>
           <div className="flex gap-4 justify-center">
-            <Button variant="primary" onClick={handleAuthenticateAndRedirect}>
-              Authenticate and redirect
-            </Button>
             <Button variant="primary" onClick={() => window.open('https://check.vibz.world/', '_blank')}>
               Test Authentication
             </Button>
