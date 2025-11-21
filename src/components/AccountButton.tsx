@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCircle } from 'lucide-react';
+import { CircleUser as UserCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../lib/services/userService';
 import type { UserProfile } from '../lib/types/user';
