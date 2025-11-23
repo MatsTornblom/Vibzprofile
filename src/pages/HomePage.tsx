@@ -1,11 +1,13 @@
 import React from 'react';
-import { Camera, Loader2 } from 'lucide-react';
+import { Camera, Loader2, Save } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { FreeVibzButton } from '../components/FreeVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
 import { VIBZ_PRODUCT } from '../lib/stripe-config';
+import { uploadProfileImage, saveUser } from '../lib/services/userService';
+import type { UserProfile } from '../lib/types/user';
 
 export function HomePage() {
   const { user, loading, refreshUser } = useCurrentUser();
@@ -13,6 +15,11 @@ export function HomePage() {
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
   const [vibzBalance, setVibzBalance] = React.useState<number>(0);
+  const [editedUser, setEditedUser] = React.useState<Partial<UserProfile>>({});
+  const [saveLoading, setSaveLoading] = React.useState(false);
+  const [saveSuccess, setSaveSuccess] = React.useState(false);
+  const [uploadingImage, setUploadingImage] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleBuyVibz = async () => {
     try {
@@ -38,12 +45,71 @@ export function HomePage() {
   React.useEffect(() => {
     if (user) {
       setVibzBalance(user.vibz_balance || 0);
+      setEditedUser({
+        username: user.username,
+        wallet_address: user.wallet_address,
+        email: user.email,
+        profile_image_url: user.profile_image_url,
+      });
     }
   }, [user]);
 
   const handleVibzAdded = (newBalance: number) => {
     setVibzBalance(newBalance);
     refreshUser();
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const { url } = await uploadProfileImage(file);
+      setEditedUser({ ...editedUser, profile_image_url: url });
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+
+    setSaveLoading(true);
+    setSaveSuccess(false);
+
+    try {
+      await saveUser({
+        ...user,
+        username: editedUser.username ?? user.username,
+        wallet_address: editedUser.wallet_address ?? user.wallet_address,
+        email: editedUser.email ?? user.email,
+        profile_image_url: editedUser.profile_image_url ?? user.profile_image_url,
+      });
+
+      setSaveSuccess(true);
+      await refreshUser();
+
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      alert('Failed to save profile. Please try again.');
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   // Auto-redirect to login if not authenticated (skip in dev mode)
@@ -93,12 +159,27 @@ export function HomePage() {
         <div className="mb-8">
           <div className="relative w-32 h-32 mx-auto mb-6">
             <img
-              src={user.profile_image_url || 'https://via.placeholder.com/150'}
+              src={editedUser.profile_image_url || user.profile_image_url || 'https://via.placeholder.com/150'}
               alt="Profile"
               className="w-full h-full rounded-full object-cover"
             />
-            <button className="absolute bottom-0 right-0 bg-pink-500 rounded-full p-2 hover:bg-pink-600 transition-colors">
-              <Camera size={20} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingImage}
+              className="absolute bottom-0 right-0 bg-pink-500 rounded-full p-2 hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploadingImage ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <Camera size={20} />
+              )}
             </button>
           </div>
 
@@ -140,7 +221,8 @@ export function HomePage() {
             <label className="block text-sm text-white/60 mb-2">Name</label>
             <input
               type="text"
-              value={user.username || ''}
+              value={editedUser.username ?? ''}
+              onChange={(e) => setEditedUser({ ...editedUser, username: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
               placeholder="Enter your name"
             />
@@ -160,7 +242,8 @@ export function HomePage() {
             <label className="block text-sm text-white/60 mb-2">Solana Wallet Address</label>
             <input
               type="text"
-              value={user.wallet_address || ''}
+              value={editedUser.wallet_address ?? ''}
+              onChange={(e) => setEditedUser({ ...editedUser, wallet_address: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
               placeholder="Enter wallet address"
             />
@@ -170,11 +253,37 @@ export function HomePage() {
             <label className="block text-sm text-white/60 mb-2">Email</label>
             <input
               type="email"
-              value={user.email || ''}
+              value={editedUser.email ?? ''}
+              onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
               placeholder="Enter email address"
             />
           </div>
+
+          {saveSuccess && (
+            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-green-300 text-sm text-center">
+              Profile saved successfully!
+            </div>
+          )}
+
+          <Button
+            variant="primary"
+            onClick={handleSaveProfile}
+            disabled={saveLoading}
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {saveLoading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save size={18} />
+                Save Profile
+              </>
+            )}
+          </Button>
         </div>
 
         {/* Statistics */}

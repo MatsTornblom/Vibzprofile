@@ -103,6 +103,61 @@ export async function addFreeVibz(userId: string, amount: number = 100): Promise
   }
 }
 
+export async function uploadProfileImage(file: File): Promise<{ path: string; url: string }> {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.user?.id) {
+    throw new Error('Authentication required');
+  }
+
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const filePath = `${session.user.id}/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from('profilepics')
+      .upload(filePath, file, {
+        upsert: false
+      });
+
+    if (error) {
+      throw new Error(`Upload failed: ${error.message}`);
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('profilepics')
+      .getPublicUrl(filePath);
+
+    return { path: filePath, url: urlData.publicUrl };
+  } catch (error) {
+    console.error('Storage error:', error);
+    throw error;
+  }
+}
+
+export async function saveUser(profile: UserProfile): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from('users')
+      .upsert({
+        id: profile.id,
+        username: profile.username,
+        wallet_address: profile.wallet_address,
+        profile_image_url: profile.profile_image_url,
+        email: profile.email,
+        updated_at: new Date().toISOString()
+      });
+
+    if (error) {
+      throw new Error(`Failed to save profile: ${error.message}`);
+    }
+  } catch (error) {
+    console.error('Error saving user:', error);
+    throw error;
+  }
+}
+
 export function clearStoredUserId(): void {
   localStorage.removeItem('user_id');
 }
