@@ -120,10 +120,10 @@ export function HomePage() {
     try {
       setLogoutLoading(true);
       await signOut();
-      window.location.href = 'https://enter.vibz.world';
+      window.location.href = 'https://love.vibz.world';
     } catch (error) {
       console.error('Logout error:', error);
-      window.location.href = 'https://enter.vibz.world';
+      window.location.href = 'https://love.vibz.world';
     } finally {
       setLogoutLoading(false);
     }
@@ -156,10 +156,23 @@ export function HomePage() {
       <header className="border-b border-white/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
-          <Button variant="secondary" onClick={() => {
-            window.location.href = 'https://enter.vibz.world/logout';
-          }}>
-            Log Out
+          <Button
+            variant="secondary"
+            onClick={handleLogout}
+            disabled={logoutLoading}
+            className="flex items-center gap-2"
+          >
+            {logoutLoading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Logging out...
+              </>
+            ) : (
+              <>
+                <LogOut size={18} />
+                Log Out
+              </>
+            )}
           </Button>
         </div>
       </header>
@@ -302,24 +315,6 @@ export function HomePage() {
             )}
           </Button>
 
-          <Button
-            variant="secondary"
-            onClick={handleLogout}
-            disabled={logoutLoading}
-            className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {logoutLoading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Logging out...
-              </>
-            ) : (
-              <>
-                <LogOut size={18} />
-                Logout
-              </>
-            )}
-          </Button>
         </div>
 
         {/* Statistics */}
