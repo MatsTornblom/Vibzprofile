@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Sparkles } from 'lucide-react';
+import { Camera, Gift } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
@@ -17,106 +17,135 @@ export function HomePage() {
     }
   }, [user, loading, isDevMode]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white/60">Loading profile...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="max-w-2xl mx-auto text-center space-y-8">
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <header className="border-b border-white/10 p-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
+          <Button variant="secondary" onClick={() => {
+            window.location.href = 'https://enter.vibz.world/logout';
+          }}>
+            Log Out
+          </Button>
+        </div>
+      </header>
+
+      <div className="max-w-4xl mx-auto p-4 md:p-8">
         {/* Development Mode Indicator */}
         {isDevMode && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-yellow-300 text-sm">
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-yellow-300 text-sm mb-6">
             🔧 Development Mode Active
           </div>
         )}
 
-        {/* Hero Section */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="text-pink-500" size={32} fill="currentColor" />
-            <Sparkles className="text-yellow-400" size={24} />
+        {/* Profile Header */}
+        <div className="mb-8">
+          <div className="relative w-32 h-32 mx-auto mb-6">
+            <img
+              src={user.profile_image_url || 'https://via.placeholder.com/150'}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover"
+            />
+            <button className="absolute bottom-0 right-0 bg-pink-500 rounded-full p-2 hover:bg-pink-600 transition-colors">
+              <Camera size={20} />
+            </button>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-            Vibz Template
-          </h1>
-
-          <p className="text-xl text-white/80 max-w-lg mx-auto">
-            A starter template for building applications in the Vibz ecosystem
-          </p>
-        </div>
-
-        {/* User Status */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-          {user ? (
-            <div className="space-y-4">
-              {/* Profile Picture */}
-              {user.profile_image_url && (
-                <div className="flex justify-center">
-                  <img 
-                    src={user.profile_image_url} 
-                    alt={user.username || 'User profile'}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-pink-500/30"
-                  />
-                </div>
-              )}
-              
-              <div className="space-y-2 text-center">
-              <p className="text-white/60">Welcome back!</p>
-              <p className="text-lg font-medium">
-                {user.username || 'Anonymous User'}
-              </p>
-              <p className="text-sm text-white/40">
-                User ID: {user.id}
-              </p>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <p className="text-white/60">Not signed in</p>
-              <Button 
-                variant="primary" 
-                onClick={() => window.open('https://enter.vibz.world/', '_blank')}
+          {/* VIBZ Balance */}
+          <div className="text-center mb-6">
+            <p className="text-white/60 mb-2">$VIBZ Balance</p>
+            <p className="text-5xl font-bold mb-4">{user.vibz_balance || 0}</p>
+            <div className="flex gap-3 justify-center">
+              <Button
+                variant="primary"
+                onClick={() => console.log('Get free VIBZ')}
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
               >
-                Sign in/Sign up
+                <Gift size={18} />
+                Get free $VIBZ
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => console.log('Buy VIBZ')}
+                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg"
+              >
+                Buy $VIBZ
               </Button>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Features */}
+        {/* Editable Fields */}
+        <div className="space-y-4 mb-8">
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Name</label>
+            <input
+              type="text"
+              value={user.username || ''}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
+              placeholder="Enter your name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Citizen ID</label>
+            <input
+              type="text"
+              value={user.id}
+              disabled
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/60 cursor-not-allowed"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Solana Wallet Address</label>
+            <input
+              type="text"
+              value={user.wallet_address || ''}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
+              placeholder="Enter wallet address"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Email</label>
+            <input
+              type="email"
+              value={user.email || ''}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
+              placeholder="Enter email address"
+            />
+          </div>
+        </div>
+
+        {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-            <h3 className="font-semibold mb-2">Authentication</h3>
-            <p className="text-sm text-white/60">
-              Cross-domain cookie-based auth system
-            </p>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <p className="text-white/60 text-sm mb-2">Messages Sent</p>
+            <p className="text-4xl font-bold">{user.messages_sent || 0}</p>
           </div>
-          
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-            <h3 className="font-semibold mb-2">Design System</h3>
-            <p className="text-sm text-white/60">
-              Consistent UI components and styling
-            </p>
-          </div>
-          
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-            <h3 className="font-semibold mb-2">Database</h3>
-            <p className="text-sm text-white/60">
-              Pre-configured Supabase integration
-            </p>
-          </div>
-        </div>
 
-        {/* Call to Action */}
-        <div className="space-y-4">
-          <p className="text-white/60">
-            Start building your Vibz application!
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button variant="primary" onClick={() => window.open('https://check.vibz.world/', '_blank')}>
-              Test Authentication
-            </Button>
-            <Button variant="secondary" onClick={() => window.open('https://github.com/MatsTornblom/VibzWorldTemplate', '_blank')}>
-              View Template in GitHub
-            </Button>
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <p className="text-white/60 text-sm mb-2">Messages Received</p>
+            <p className="text-4xl font-bold">{user.messages_received || 0}</p>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+            <p className="text-white/60 text-sm mb-2">Pending Messages</p>
+            <p className="text-4xl font-bold">{user.pending_messages || 0}</p>
           </div>
         </div>
       </div>
