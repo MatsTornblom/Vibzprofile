@@ -11,18 +11,21 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirm = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (!session?.user?.id) {
         throw new Error('Authentication required');
       }
 
-      // Add 100 VIBZ to the user's balance
       const { error: incrementError } = await supabase.rpc('increment_vibz_balance', {
         user_id: session.user.id,
         amount: 100
@@ -32,7 +35,6 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
         throw new Error(`Failed to add VIBZ: ${incrementError.message}`);
       }
 
-      // Get the updated balance
       const { data: userData, error: fetchError } = await supabase
         .from('users')
         .select('vibz_balance')
@@ -43,15 +45,13 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
         throw new Error(`Failed to fetch updated balance: ${fetchError.message}`);
       }
 
-      // Update the parent component with the new balance
       onVibzAdded(userData.vibz_balance);
-      
-      // Show the popup
-      setShowPopup(true);
-      
+      setShowPopup(false);
+
     } catch (error) {
       console.error('Free VIBZ error:', error);
       setError(error instanceof Error ? error.message : 'Failed to add free VIBZ');
+      setShowPopup(false);
     } finally {
       setIsLoading(false);
     }
@@ -91,21 +91,38 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
             <div className="flex justify-center mb-4">
               <Gift className="text-green-500" size={48} />
             </div>
-            
+
             <h2 className="text-xl font-semibold mb-4 text-white">
-              Congratulations!
+              Get Free $VIBZ
             </h2>
-            
+
             <p className="text-white/80 mb-6">
-              100 $VIBZ has been added to your account. Now go spread love in the Vibz world, you beautiful soul!
+              Click the button below to add 100 $VIBZ to your account!
             </p>
 
-            <button
-              onClick={() => setShowPopup(false)}
-              className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-6 rounded-lg transition-colors"
-            >
-              Awesome!
-            </button>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setShowPopup(false)}
+                disabled={isLoading}
+                className="bg-white/10 hover:bg-white/20 text-white py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirm}
+                disabled={isLoading}
+                className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-6 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" size={16} />
+                    Adding...
+                  </>
+                ) : (
+                  'Add $VIBZ'
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
