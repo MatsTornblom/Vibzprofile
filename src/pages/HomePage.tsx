@@ -1,16 +1,20 @@
 import React from 'react';
 import { Camera, Gift, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { Modal } from '../components/ui/Modal';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
 import { VIBZ_PRODUCT } from '../lib/stripe-config';
+import { addFreeVibz } from '../lib/services/userService';
 
 export function HomePage() {
-  const { user, loading } = useCurrentUser();
+  const { user, loading, refreshUser } = useCurrentUser();
   const isDevMode = isDevEnvironment();
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
+  const [showFreeVibzModal, setShowFreeVibzModal] = React.useState(false);
+  const [freeVibzLoading, setFreeVibzLoading] = React.useState(false);
 
   const handleBuyVibz = async () => {
     try {
@@ -30,6 +34,26 @@ export function HomePage() {
       console.error('Failed to create checkout session:', error);
       setCheckoutError(error instanceof Error ? error.message : 'Failed to start checkout');
       setCheckoutLoading(false);
+    }
+  };
+
+  const handleGetFreeVibz = async () => {
+    if (!user) return;
+
+    setFreeVibzLoading(true);
+    try {
+      const success = await addFreeVibz(user.id, 100);
+      if (success) {
+        await refreshUser();
+        setShowFreeVibzModal(false);
+      } else {
+        alert('Failed to add free VIBZ. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error adding free VIBZ:', error);
+      alert('Failed to add free VIBZ. Please try again.');
+    } finally {
+      setFreeVibzLoading(false);
     }
   };
 
@@ -103,7 +127,7 @@ export function HomePage() {
             <div className="flex gap-3 justify-center">
               <Button
                 variant="primary"
-                onClick={() => console.log('Get free VIBZ')}
+                onClick={() => setShowFreeVibzModal(true)}
                 className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
                 disabled={checkoutLoading}
               >
@@ -128,6 +152,48 @@ export function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Free VIBZ Modal */}
+        <Modal
+          isOpen={showFreeVibzModal}
+          onClose={() => setShowFreeVibzModal(false)}
+          title="Get Free $VIBZ"
+          size="sm"
+        >
+          <div className="p-6 space-y-4">
+            <p className="text-white/80">
+              Claim 100 free $VIBZ to get started in Vibz World!
+            </p>
+            <div className="flex gap-3">
+              <Button
+                variant="secondary"
+                onClick={() => setShowFreeVibzModal(false)}
+                className="flex-1"
+                disabled={freeVibzLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleGetFreeVibz}
+                className="flex-1 bg-green-500 hover:bg-green-600"
+                disabled={freeVibzLoading}
+              >
+                {freeVibzLoading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin mr-2" />
+                    Claiming...
+                  </>
+                ) : (
+                  <>
+                    <Gift size={18} className="mr-2" />
+                    Claim Free $VIBZ
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </Modal>
 
         {/* Editable Fields */}
         <div className="space-y-4 mb-8">

@@ -5,7 +5,6 @@ import { AccountPage } from './pages/AccountPage';
 import { SuccessPage } from './pages/SuccessPage';
 import { CancelPage } from './pages/CancelPage';
 import { VersionChecker } from './components/VersionChecker';
-import { AccountButton } from './components/AccountButton';
 import { useCurrentUser } from './hooks/useCurrentUser';
 import { useFullscreen } from './hooks/useFullscreen';
 
@@ -29,11 +28,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-black text-white">
-        {/* Global Header */}
-        <header className="fixed top-4 left-4 z-50">
-          <AccountButton />
-        </header>
-
         {/* Routes */}
         <Routes>
           <Route path="/" element={<HomePage />} />
