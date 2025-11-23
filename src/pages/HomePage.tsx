@@ -1,20 +1,18 @@
 import React from 'react';
-import { Camera, Gift, Loader2 } from 'lucide-react';
+import { Camera, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Modal } from '../components/ui/Modal';
+import { FreeVibzButton } from '../components/FreeVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
 import { VIBZ_PRODUCT } from '../lib/stripe-config';
-import { addFreeVibz } from '../lib/services/userService';
 
 export function HomePage() {
   const { user, loading, refreshUser } = useCurrentUser();
   const isDevMode = isDevEnvironment();
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
-  const [showFreeVibzModal, setShowFreeVibzModal] = React.useState(false);
-  const [freeVibzLoading, setFreeVibzLoading] = React.useState(false);
+  const [vibzBalance, setVibzBalance] = React.useState<number>(0);
 
   const handleBuyVibz = async () => {
     try {
@@ -37,24 +35,15 @@ export function HomePage() {
     }
   };
 
-  const handleGetFreeVibz = async () => {
-    if (!user) return;
-
-    setFreeVibzLoading(true);
-    try {
-      const success = await addFreeVibz(user.id, 100);
-      if (success) {
-        await refreshUser();
-        setShowFreeVibzModal(false);
-      } else {
-        alert('Failed to add free VIBZ. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error adding free VIBZ:', error);
-      alert('Failed to add free VIBZ. Please try again.');
-    } finally {
-      setFreeVibzLoading(false);
+  React.useEffect(() => {
+    if (user) {
+      setVibzBalance(user.vibz_balance || 0);
     }
+  }, [user]);
+
+  const handleVibzAdded = (newBalance: number) => {
+    setVibzBalance(newBalance);
+    refreshUser();
   };
 
   // Auto-redirect to login if not authenticated (skip in dev mode)
@@ -116,7 +105,7 @@ export function HomePage() {
           {/* VIBZ Balance */}
           <div className="text-center mb-6">
             <p className="text-white/60 mb-2">$VIBZ Balance</p>
-            <p className="text-5xl font-bold mb-4">{user.vibz_balance || 0}</p>
+            <p className="text-5xl font-bold mb-4">{vibzBalance}</p>
 
             {checkoutError && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mb-4">
@@ -125,15 +114,7 @@ export function HomePage() {
             )}
 
             <div className="flex gap-3 justify-center">
-              <Button
-                variant="primary"
-                onClick={() => setShowFreeVibzModal(true)}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
-                disabled={checkoutLoading}
-              >
-                <Gift size={18} />
-                Get free $VIBZ
-              </Button>
+              <FreeVibzButton onVibzAdded={handleVibzAdded} />
               <Button
                 variant="primary"
                 onClick={handleBuyVibz}
@@ -152,48 +133,6 @@ export function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Free VIBZ Modal */}
-        <Modal
-          isOpen={showFreeVibzModal}
-          onClose={() => setShowFreeVibzModal(false)}
-          title="Get Free $VIBZ"
-          size="sm"
-        >
-          <div className="p-6 space-y-4">
-            <p className="text-white/80">
-              Claim 100 free $VIBZ to get started in Vibz World!
-            </p>
-            <div className="flex gap-3">
-              <Button
-                variant="secondary"
-                onClick={() => setShowFreeVibzModal(false)}
-                className="flex-1"
-                disabled={freeVibzLoading}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleGetFreeVibz}
-                className="flex-1 bg-green-500 hover:bg-green-600"
-                disabled={freeVibzLoading}
-              >
-                {freeVibzLoading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin mr-2" />
-                    Claiming...
-                  </>
-                ) : (
-                  <>
-                    <Gift size={18} className="mr-2" />
-                    Claim Free $VIBZ
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </Modal>
 
         {/* Editable Fields */}
         <div className="space-y-4 mb-8">

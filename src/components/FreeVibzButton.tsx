@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Loader2, Gift } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/api/supabase';
 
 interface FreeVibzButtonProps {
   onVibzAdded: (newBalance: number) => void;
@@ -63,8 +63,8 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
         <button
           onClick={handleClick}
           disabled={isLoading}
-          className="bg-green-500 hover:bg-green-600 text-white py-1.5 px-3 rounded-lg
-            transition-colors disabled:opacity-50 disabled:hover:bg-green-500 flex items-center gap-2 text-sm"
+          className="bg-green-500 hover:bg-green-600 text-white py-1.5 px-3 rounded-lg transition-colors disabled:opacity-50 disabled:hover:bg-green-500 flex items-center gap-2 text-sm"
+          style={{ backgroundColor: isLoading ? undefined : '#22c55e' }}
         >
           {isLoading ? (
             <>
