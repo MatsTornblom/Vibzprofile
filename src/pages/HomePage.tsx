@@ -1,5 +1,6 @@
 import React from 'react';
-import { Camera, Loader2, Save } from 'lucide-react';
+import { Camera, Loader2, Save, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { FreeVibzButton } from '../components/FreeVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
@@ -7,10 +8,12 @@ import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
 import { VIBZ_PRODUCT } from '../lib/stripe-config';
 import { uploadProfileImage, saveUser } from '../lib/services/userService';
+import { signOut } from '../lib/auth/service';
 import type { UserProfile } from '../lib/types/user';
 
 export function HomePage() {
   const { user, loading, refreshUser } = useCurrentUser();
+  const navigate = useNavigate();
   const isDevMode = isDevEnvironment();
   const [checkoutLoading, setCheckoutLoading] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
@@ -19,6 +22,7 @@ export function HomePage() {
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [saveSuccess, setSaveSuccess] = React.useState(false);
   const [uploadingImage, setUploadingImage] = React.useState(false);
+  const [logoutLoading, setLogoutLoading] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleBuyVibz = async () => {
@@ -109,6 +113,19 @@ export function HomePage() {
       alert('Failed to save profile. Please try again.');
     } finally {
       setSaveLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      setLogoutLoading(true);
+      await signOut();
+      window.location.href = 'https://vibz.world/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+      window.location.href = 'https://vibz.world/login';
+    } finally {
+      setLogoutLoading(false);
     }
   };
 
@@ -281,6 +298,25 @@ export function HomePage() {
               <>
                 <Save size={18} />
                 Save Profile
+              </>
+            )}
+          </Button>
+
+          <Button
+            variant="secondary"
+            onClick={handleLogout}
+            disabled={logoutLoading}
+            className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {logoutLoading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Logging out...
+              </>
+            ) : (
+              <>
+                <LogOut size={18} />
+                Logout
               </>
             )}
           </Button>

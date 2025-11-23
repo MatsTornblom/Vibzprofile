@@ -44,3 +44,14 @@ export function isDevEnvironment(): boolean {
 export function getDevUserId(): string | undefined {
   return import.meta.env.VITE_DEV_USER_ID;
 }
+
+export function isReactNativeWebView(): boolean {
+  const ua = navigator.userAgent;
+  return ua.includes('ReactNativeWebView');
+}
+
+export function sendMessageToReactNative(message: Record<string, unknown>): void {
+  if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage(JSON.stringify(message));
+  }
+}
