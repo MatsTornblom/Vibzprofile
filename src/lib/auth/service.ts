@@ -11,11 +11,24 @@ export async function signOut(): Promise<AuthResponse> {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      return { success: false, error: error.message };
+      console.error('Supabase sign out error:', error);
     }
 
+    const hostname = window.location.hostname;
+    const domainParts = hostname.split('.');
+    const rootDomain = domainParts.length >= 2
+      ? '.' + domainParts.slice(-2).join('.')
+      : hostname;
+
     const cookieOptions = {
-      domain: '.' + window.location.hostname.split('.').slice(-2).join('.'),
+      domain: rootDomain,
+      path: '/',
+      sameSite: 'lax' as const,
+      secure: true
+    };
+
+    const cookieOptionsWithoutDomain = {
+      path: '/',
       sameSite: 'lax' as const,
       secure: true
     };
@@ -23,6 +36,14 @@ export async function signOut(): Promise<AuthResponse> {
     Cookies.remove('vibz_return_url', cookieOptions);
     Cookies.remove('vibz_username', cookieOptions);
     Cookies.remove('vibz_id', cookieOptions);
+
+    Cookies.remove('vibz_return_url', cookieOptionsWithoutDomain);
+    Cookies.remove('vibz_username', cookieOptionsWithoutDomain);
+    Cookies.remove('vibz_id', cookieOptionsWithoutDomain);
+
+    Cookies.remove('vibz_return_url');
+    Cookies.remove('vibz_username');
+    Cookies.remove('vibz_id');
 
     if (isReactNativeWebView()) {
       sendMessageToReactNative({

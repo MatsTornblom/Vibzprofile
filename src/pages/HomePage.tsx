@@ -120,10 +120,10 @@ export function HomePage() {
     try {
       setLogoutLoading(true);
       await signOut();
-      window.location.href = 'https://vibz.world/login';
+      window.location.href = 'https://enter.vibz.world';
     } catch (error) {
       console.error('Logout error:', error);
-      window.location.href = 'https://vibz.world/login';
+      window.location.href = 'https://enter.vibz.world';
     } finally {
       setLogoutLoading(false);
     }
