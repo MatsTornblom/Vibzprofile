@@ -1,12 +1,37 @@
 import React from 'react';
-import { Camera, Gift } from 'lucide-react';
+import { Camera, Gift, Loader2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
+import { createCheckoutSession } from '../lib/api/stripe';
+import { VIBZ_PRODUCT } from '../lib/stripe-config';
 
 export function HomePage() {
   const { user, loading } = useCurrentUser();
   const isDevMode = isDevEnvironment();
+  const [checkoutLoading, setCheckoutLoading] = React.useState(false);
+  const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
+
+  const handleBuyVibz = async () => {
+    try {
+      setCheckoutLoading(true);
+      setCheckoutError(null);
+
+      const baseUrl = window.location.origin;
+      const { url } = await createCheckoutSession({
+        priceId: VIBZ_PRODUCT.priceId,
+        mode: VIBZ_PRODUCT.mode,
+        successUrl: `${baseUrl}/success`,
+        cancelUrl: `${baseUrl}/cancel`,
+      });
+
+      window.location.href = url;
+    } catch (error) {
+      console.error('Failed to create checkout session:', error);
+      setCheckoutError(error instanceof Error ? error.message : 'Failed to start checkout');
+      setCheckoutLoading(false);
+    }
+  };
 
   // Auto-redirect to login if not authenticated (skip in dev mode)
   React.useEffect(() => {
@@ -68,21 +93,37 @@ export function HomePage() {
           <div className="text-center mb-6">
             <p className="text-white/60 mb-2">$VIBZ Balance</p>
             <p className="text-5xl font-bold mb-4">{user.vibz_balance || 0}</p>
+
+            {checkoutError && (
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mb-4">
+                {checkoutError}
+              </div>
+            )}
+
             <div className="flex gap-3 justify-center">
               <Button
                 variant="primary"
                 onClick={() => console.log('Get free VIBZ')}
                 className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
+                disabled={checkoutLoading}
               >
                 <Gift size={18} />
                 Get free $VIBZ
               </Button>
               <Button
                 variant="primary"
-                onClick={() => console.log('Buy VIBZ')}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg"
+                onClick={handleBuyVibz}
+                disabled={checkoutLoading}
+                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Buy $VIBZ
+                {checkoutLoading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Buy $VIBZ'
+                )}
               </Button>
             </div>
           </div>

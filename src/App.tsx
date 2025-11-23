@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { AccountPage } from './pages/AccountPage';
+import { SuccessPage } from './pages/SuccessPage';
+import { CancelPage } from './pages/CancelPage';
 import { VersionChecker } from './components/VersionChecker';
 import { AccountButton } from './components/AccountButton';
 import { useCurrentUser } from './hooks/useCurrentUser';
@@ -36,6 +38,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/cancel" element={<CancelPage />} />
         </Routes>
 
         {/* Global Components */}
