@@ -46,12 +46,30 @@ export function getDevUserId(): string | undefined {
 }
 
 export function isReactNativeWebView(): boolean {
-  const ua = navigator.userAgent;
-  return ua.includes('ReactNativeWebView');
+  return !!(
+    (window as any).ReactNativeWebView ||
+    (window as any).isReactNativeWebView ||
+    navigator.userAgent.includes('ReactNativeWebView') ||
+    (window as any).webkit?.messageHandlers?.ReactNativeWebView
+  );
 }
 
-export function sendMessageToReactNative(message: Record<string, unknown>): void {
-  if (window.ReactNativeWebView) {
-    window.ReactNativeWebView.postMessage(JSON.stringify(message));
+export function sendMessageToReactNative(message: any): void {
+  if (!isReactNativeWebView()) return;
+
+  try {
+    // Android WebView
+    if ((window as any).ReactNativeWebView?.postMessage) {
+      (window as any).ReactNativeWebView.postMessage(JSON.stringify(message));
+      return;
+    }
+
+    // iOS WebView
+    if ((window as any).webkit?.messageHandlers?.ReactNativeWebView) {
+      (window as any).webkit.messageHandlers.ReactNativeWebView.postMessage(message);
+      return;
+    }
+  } catch (error) {
+    console.error('Failed to send message to React Native:', error);
   }
 }
