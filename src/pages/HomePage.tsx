@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Loader2, Save, LogOut } from 'lucide-react';
+import { Camera, Loader2, Save, LogOut, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { FreeVibzButton } from '../components/FreeVibzButton';
@@ -155,7 +155,17 @@ export function HomePage() {
       {/* Header */}
       <header className="border-b border-white/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="secondary"
+              onClick={() => window.location.href = 'https://love.vibz.world'}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft size={18} />
+              Back
+            </Button>
+            <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
+          </div>
           <Button
             variant="secondary"
             onClick={handleLogout}
