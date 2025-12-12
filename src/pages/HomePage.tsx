@@ -162,7 +162,7 @@ export function HomePage() {
               className="flex items-center gap-2"
             >
               <ArrowLeft size={18} />
-              Back
+              Spread love
             </Button>
             <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
           </div>
