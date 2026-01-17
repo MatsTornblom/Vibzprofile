@@ -8,7 +8,6 @@ import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
 import { VIBZ_PRODUCT } from '../lib/stripe-config';
 import { uploadProfileImage, saveUser } from '../lib/services/userService';
-import { signOut } from '../lib/auth/service';
 import type { UserProfile } from '../lib/types/user';
 
 export function HomePage() {
@@ -22,7 +21,6 @@ export function HomePage() {
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [saveSuccess, setSaveSuccess] = React.useState(false);
   const [uploadingImage, setUploadingImage] = React.useState(false);
-  const [logoutLoading, setLogoutLoading] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleBuyVibz = async () => {
@@ -116,18 +114,6 @@ export function HomePage() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      setLogoutLoading(true);
-      await signOut();
-      window.location.href = 'https://love.vibz.world';
-    } catch (error) {
-      console.error('Logout error:', error);
-      window.location.href = 'https://love.vibz.world';
-    } finally {
-      setLogoutLoading(false);
-    }
-  };
 
   // Auto-redirect to login if not authenticated (skip in dev mode)
   React.useEffect(() => {
@@ -168,21 +154,11 @@ export function HomePage() {
           </div>
           <Button
             variant="secondary"
-            onClick={handleLogout}
-            disabled={logoutLoading}
+            onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
             className="flex items-center gap-2"
           >
-            {logoutLoading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Logging out...
-              </>
-            ) : (
-              <>
-                <LogOut size={18} />
-                Log Out
-              </>
-            )}
+            <LogOut size={18} />
+            Log Out
           </Button>
         </div>
       </header>
