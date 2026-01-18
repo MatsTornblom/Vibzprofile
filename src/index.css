@@ -33,17 +33,19 @@
 }
 
 @font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/poppins-regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Deaugusta';
+  src: url('/fonts/deaugusta.ttf') format('truetype');
+  font-weight: 100 900; /* Support all weights from 100 to 900 */
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'Deaugusta';
-  src: url('/fonts/deaugusta.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-regular.ttf') format('truetype');
+  font-weight: 100 900; /* Support all weights */
   font-style: normal;
+  font-display: swap;
 }
 
 body {
