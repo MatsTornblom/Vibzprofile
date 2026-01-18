@@ -200,7 +200,7 @@ export function HomePage() {
 
           {/* VIBZ Balance */}
           <div className="text-center mb-6">
-            <p className="text-vibz-red/60 mb-2">$VIBZ Balance</p>
+            <p className="text-vibz-red/60 mb-2 font-poppins" >$VIBZ Balance</p>
             <p className="text-5xl font-bold mb-4 text-vibz-red">{vibzBalance}</p>
 
             {checkoutError && (
