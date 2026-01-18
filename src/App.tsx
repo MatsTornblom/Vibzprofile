@@ -16,10 +16,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-vibz-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-vibz-red mx-auto mb-4"></div>
+          <p className="text-vibz-red">Loading...</p>
         </div>
       </div>
     );
@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-vibz-bg text-vibz-red">
         {/* Routes */}
         <Routes>
           <Route path="/" element={<HomePage />} />

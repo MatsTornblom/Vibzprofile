@@ -14,23 +14,23 @@ export function CancelPage() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-vibz-bg text-vibz-red flex items-center justify-center p-4">
       <div className="max-w-md mx-auto text-center space-y-6">
-        <XCircle className="w-20 h-20 text-red-500 mx-auto" />
+        <XCircle className="w-20 h-20 text-vibz-red mx-auto" />
 
-        <h1 className="text-4xl font-bold">Payment Cancelled</h1>
+        <h1 className="text-4xl font-bold text-vibz-red">Payment Cancelled</h1>
 
-        <p className="text-white/80 text-lg">
+        <p className="text-vibz-red/80 text-lg">
           Your payment was cancelled. No charges were made.
         </p>
 
-        <div className="text-white/60 text-sm">
+        <div className="text-vibz-red/60 text-sm">
           Redirecting to dashboard in 5 seconds...
         </div>
 
         <a
           href="/"
-          className="inline-block text-pink-500 hover:text-pink-400 underline"
+          className="inline-block text-vibz-red hover:text-vibz-button-red-hover underline"
         >
           Return to Dashboard
         </a>

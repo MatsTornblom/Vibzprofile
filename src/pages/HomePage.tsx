@@ -129,8 +129,8 @@ export function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white/60">Loading profile...</div>
+      <div className="min-h-screen bg-vibz-bg flex items-center justify-center">
+        <div className="text-vibz-red/60">Loading profile...</div>
       </div>
     );
   }
@@ -140,18 +140,18 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-vibz-bg text-vibz-red">
       {/* Header */}
-      <header className="border-b border-white/10 p-4">
+      <header className="border-b border-vibz-red/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <StandardBeigeButton
+            <StandardRedButton
               onClick={() => window.location.href = 'https://love.vibz.world'}
             >
               <ArrowLeft size={18} />
               Spread love
-            </StandardBeigeButton>
-            <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
+            </StandardRedButton>
+            <h1 className="text-2xl font-bold text-vibz-red">Vibz World Citizenship</h1>
           </div>
           <StandardBeigeButton
             onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
@@ -165,8 +165,8 @@ export function HomePage() {
       <div className="max-w-4xl mx-auto p-4 md:p-8">
         {/* Development Mode Indicator */}
         {isDevMode && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-yellow-300 text-sm mb-6">
-            🔧 Development Mode Active
+          <div className="bg-vibz-red/10 border border-vibz-red/30 rounded-lg p-3 text-vibz-red text-sm mb-6">
+            Development Mode Active
           </div>
         )}
 
@@ -200,11 +200,11 @@ export function HomePage() {
 
           {/* VIBZ Balance */}
           <div className="text-center mb-6">
-            <p className="text-white/60 mb-2">$VIBZ Balance</p>
-            <p className="text-5xl font-bold mb-4">{vibzBalance}</p>
+            <p className="text-vibz-red/60 mb-2">$VIBZ Balance</p>
+            <p className="text-5xl font-bold mb-4 text-vibz-red">{vibzBalance}</p>
 
             {checkoutError && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mb-4">
+              <div className="bg-vibz-red/10 border border-vibz-red/30 rounded-lg p-3 text-vibz-red text-sm mb-4">
                 {checkoutError}
               </div>
             )}
@@ -262,7 +262,7 @@ export function HomePage() {
           />
 
           {saveSuccess && (
-            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-green-300 text-sm text-center">
+            <div className="bg-vibz-red/10 border border-vibz-red/30 rounded-lg p-3 text-vibz-red text-sm text-center">
               Profile saved successfully!
             </div>
           )}
@@ -289,19 +289,19 @@ export function HomePage() {
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <p className="text-white/60 text-sm mb-2">Messages Sent</p>
-            <p className="text-4xl font-bold">{user.messages_sent || 0}</p>
+          <div className="bg-vibz-button-beige backdrop-blur-sm rounded-xl p-6 border border-vibz-red/10">
+            <p className="text-vibz-red/60 text-sm mb-2">Messages Sent</p>
+            <p className="text-4xl font-bold text-vibz-red">{user.messages_sent || 0}</p>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <p className="text-white/60 text-sm mb-2">Messages Received</p>
-            <p className="text-4xl font-bold">{user.messages_received || 0}</p>
+          <div className="bg-vibz-button-beige backdrop-blur-sm rounded-xl p-6 border border-vibz-red/10">
+            <p className="text-vibz-red/60 text-sm mb-2">Messages Received</p>
+            <p className="text-4xl font-bold text-vibz-red">{user.messages_received || 0}</p>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <p className="text-white/60 text-sm mb-2">Pending Messages</p>
-            <p className="text-4xl font-bold">{user.pending_messages || 0}</p>
+          <div className="bg-vibz-button-beige backdrop-blur-sm rounded-xl p-6 border border-vibz-red/10">
+            <p className="text-vibz-red/60 text-sm mb-2">Pending Messages</p>
+            <p className="text-4xl font-bold text-vibz-red">{user.pending_messages || 0}</p>
           </div>
         </div>
       </div>
