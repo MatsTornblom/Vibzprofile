@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
-        deaugusta: ['Deaugusta', 'serif'],
+        deaugusta: ['deaugusta', 'serif'],
         cassandra: ['Cassandra', 'serif'],
       },
       colors: {
