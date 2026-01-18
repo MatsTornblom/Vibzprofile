@@ -157,7 +157,7 @@ export function HomePage() {
           </div>
           <StandardBeigeButton
             onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
-                            className="text-xm p-2" // or text-xl, text-2xl, text-sm, etc.
+                            className="text-xs p-2" // or text-xl, text-2xl, text-sm, etc.
           >
             <LogOut size={18} />
             Log Out
