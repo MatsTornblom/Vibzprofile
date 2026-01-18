@@ -141,7 +141,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-vibz-bg text-vibz-red text-2xl">
+    <div className="min-h-screen bg-vibz-bg text-vibz-bb">
       {/* Header */}
       <header className="border-b border-vibz-red/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
