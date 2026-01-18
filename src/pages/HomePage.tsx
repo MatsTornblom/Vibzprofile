@@ -2,6 +2,7 @@ import React from 'react';
 import { Camera, Loader2, Save, LogOut, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
+import { StandardInputBox } from '../components/ui/StandardInputBox';
 import { FreeVibzButton } from '../components/FreeVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
@@ -233,48 +234,36 @@ export function HomePage() {
 
         {/* Editable Fields */}
         <div className="space-y-4 mb-8">
-          <div>
-            <label className="block text-sm text-white/60 mb-2">Name</label>
-            <input
-              type="text"
-              value={editedUser.username ?? ''}
-              onChange={(e) => setEditedUser({ ...editedUser, username: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
-              placeholder="Enter your name"
-            />
-          </div>
+          <StandardInputBox
+            label="Name"
+            type="text"
+            value={editedUser.username ?? ''}
+            onChange={(e) => setEditedUser({ ...editedUser, username: e.target.value })}
+            placeholder="Enter your name"
+          />
 
-          <div>
-            <label className="block text-sm text-white/60 mb-2">Citizen ID</label>
-            <input
-              type="text"
-              value={user.id}
-              disabled
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/60 cursor-not-allowed"
-            />
-          </div>
+          <StandardInputBox
+            label="Citizen ID"
+            type="text"
+            value={user.id}
+            disabled
+          />
 
-          <div>
-            <label className="block text-sm text-white/60 mb-2">Solana Wallet Address</label>
-            <input
-              type="text"
-              value={editedUser.wallet_address ?? ''}
-              onChange={(e) => setEditedUser({ ...editedUser, wallet_address: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
-              placeholder="Enter wallet address"
-            />
-          </div>
+          <StandardInputBox
+            label="Solana Wallet Address"
+            type="text"
+            value={editedUser.wallet_address ?? ''}
+            onChange={(e) => setEditedUser({ ...editedUser, wallet_address: e.target.value })}
+            placeholder="Enter wallet address"
+          />
 
-          <div>
-            <label className="block text-sm text-white/60 mb-2">Email</label>
-            <input
-              type="email"
-              value={editedUser.email ?? ''}
-              onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-pink-500/50"
-              placeholder="Enter email address"
-            />
-          </div>
+          <StandardInputBox
+            label="Email"
+            type="email"
+            value={editedUser.email ?? ''}
+            onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+            placeholder="Enter email address"
+          />
 
           {saveSuccess && (
             <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-green-300 text-sm text-center">
