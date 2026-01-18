@@ -148,11 +148,12 @@ export function HomePage() {
           <div className="flex items-center gap-4">
             <StandardRedButton
               onClick={() => window.location.href = 'https://love.vibz.world'}
+                className="text-sm" // or text-xl, text-2xl, text-sm, etc.
             >
               <ArrowLeft size={18} />
               Spread love
             </StandardRedButton>
-            <h1 className="text-6xl text-vibz-textbox-text font-deaugusta text-center pt-10">Vibz World Citizenship</h1>
+            <h1 className="text-2xl text-vibz-textbox-text font-deaugusta text-center pt-10">Vibz World Citizenship</h1>
           </div>
           <StandardBeigeButton
             onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
