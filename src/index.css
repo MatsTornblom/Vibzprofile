@@ -2,9 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn-vibz-red {
+    @apply font-deaugusta px-3 py-1.5 rounded-full bg-vibz-button-red text-vibz-bg shadow-lg;
+    @apply transition-all duration-200 text-center inline-flex items-center justify-center;
+    @apply hover:bg-vibz-button-red-hover hover:shadow-xl;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply text-base font-thin;
+  }
+  .btn-vibz-beige {
+    @apply font-poppins px-3 py-1.5 rounded-full bg-vibz-button-beige text-vibz-red border-2 border-vibz-red;
+    @apply transition-all duration-200 text-center inline-flex items-center justify-center;
+    @apply hover:bg-vibz-button-beige-hover;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply text-xs font-thin;
+  }
+  .btn-vibz-secondary {
+    @apply font-deaugusta px-5 py-3 rounded-full bg-white/10 text-white backdrop-blur-sm;
+    @apply transition-all duration-200 text-center inline-flex items-center justify-center;
+    @apply hover:bg-white/20;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+}
+
 @font-face {
   font-family: 'Cassandra';
   src: url('/CassandraPersonalUseRegular-3BjG.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Deaugusta';
+  src: url('/fonts/deaugusta.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -13,6 +50,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Libre Bodoni', serif;
+  overflow: hidden;
 }
 
 /* Scrollbar styles */
@@ -21,7 +59,7 @@ body {
 }
 
 .scrollbar-thumb-white\/20 {
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(255, 245, 207, 0.2) transparent;
 }
 
 .scrollbar-track-transparent {
@@ -38,8 +76,28 @@ body {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 245, 207, 0.2);
   border-radius: 3px;
+}
+
+/* Music bar animation */
+@keyframes musicBar {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 12px;
+  }
+}
+
+/* Arrow slide animation */
+@keyframes slideX {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
 }
 
 /* Fade in animation */
@@ -52,4 +110,39 @@ body {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+}
+
+/* Bounce in animation for reward notification */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Confetti fall animation */
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall {
+  animation: confettiFall linear forwards;
 }
