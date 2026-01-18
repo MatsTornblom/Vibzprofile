@@ -201,7 +201,7 @@ export function HomePage() {
           {/* VIBZ Balance */}
           <div className="text-center mb-6">
             <p className="text-vibz-red/60 mb-2 font-poppins" >$VIBZ Balance</p>
-            <p className="text-5xl font-bold mb-4 text-vibz-red">{vibzBalance}</p>
+            <p className="text-5xl font-bold font-poppins mb-4 text-vibz-red">{vibzBalance}</p>
 
             {checkoutError && (
               <div className="bg-vibz-red/10 border border-vibz-red/30 rounded-lg p-3 text-vibz-red text-sm mb-4">
