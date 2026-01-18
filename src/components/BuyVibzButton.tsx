@@ -20,7 +20,7 @@ export function BuyVibzButton({ onPurchaseClick }: BuyVibzButtonProps) {
     <button
       onClick={handleClick}
       disabled={isLoading}
-      className="btn-vibz-beige gap-2 font-poppins"
+      className="btn-vibz-beige gap-2"
     >
       {isLoading ? (
         <>
