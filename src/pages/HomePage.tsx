@@ -188,7 +188,7 @@ export function HomePage() {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingImage}
-              className="absolute bottom-0 right-0 bg-vibz-red/30 rounded-full p-2 hover:bg-vibz-red/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute bottom-0 right-0 bg-vibz-red/30 rounded-full p-2 hover:bg-vibz-red/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploadingImage ? (
                 <Loader2 size={20} className="animate-spin" />
