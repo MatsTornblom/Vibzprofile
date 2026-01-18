@@ -77,7 +77,8 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
             <>
               <Gift size={14} />
               <span>Get free $VIBZ</span>
-            </>
+                      </StandardBeigeButton>
+
           )}
         </button>
 
