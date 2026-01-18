@@ -6,6 +6,7 @@ import { StandardInputBox } from '../components/ui/StandardInputBox';
 import { StandardBeigeButton } from '../components/ui/StandardBeigeButton';
 import { StandardRedButton } from '../components/ui/StandardRedButton';
 import { FreeVibzButton } from '../components/FreeVibzButton';
+import { BuyVibzButton } from '../components/BuyVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
@@ -211,19 +212,7 @@ export function HomePage() {
 
             <div className="flex gap-3 justify-center">
               <FreeVibzButton onVibzAdded={handleVibzAdded} />
-              <StandardRedButton
-                onClick={handleBuyVibz}
-                disabled={checkoutLoading}
-              >
-                {checkoutLoading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  'Buy $VIBZ'
-                )}
-              </StandardRedButton>
+              <BuyVibzButton onPurchaseClick={handleBuyVibz} isLoading={checkoutLoading} />
             </div>
           </div>
         </div>

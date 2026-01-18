@@ -5,10 +5,10 @@ import { StandardBeigeButton } from './ui/StandardBeigeButton';
 
 interface BuyVibzButtonProps {
   onPurchaseClick?: () => void;
+  isLoading?: boolean;
 }
 
-export function BuyVibzButton({ onPurchaseClick }: BuyVibzButtonProps) {
-  const [isLoading] = useState(false);
+export function BuyVibzButton({ onPurchaseClick, isLoading = false }: BuyVibzButtonProps) {
 
   const handleClick = () => {
     if (onPurchaseClick) {
@@ -25,7 +25,7 @@ export function BuyVibzButton({ onPurchaseClick }: BuyVibzButtonProps) {
       {isLoading ? (
         <>
           <Loader2 className="animate-spin" size={14} />
-          <span>Loading...</span>
+          <span>Processing...</span>
         </>
       ) : (
         <>
