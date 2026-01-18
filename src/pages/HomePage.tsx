@@ -3,6 +3,8 @@ import { Camera, Loader2, Save, LogOut, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { StandardInputBox } from '../components/ui/StandardInputBox';
+import { StandardBeigeButton } from '../components/ui/StandardBeigeButton';
+import { StandardRedButton } from '../components/ui/StandardRedButton';
 import { FreeVibzButton } from '../components/FreeVibzButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
@@ -143,24 +145,20 @@ export function HomePage() {
       <header className="border-b border-white/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button
-              variant="secondary"
+            <StandardBeigeButton
               onClick={() => window.location.href = 'https://love.vibz.world'}
-              className="flex items-center gap-2"
             >
               <ArrowLeft size={18} />
               Spread love
-            </Button>
+            </StandardBeigeButton>
             <h1 className="text-2xl font-bold">Vibz World Citizenship</h1>
           </div>
-          <Button
-            variant="secondary"
+          <StandardBeigeButton
             onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
-            className="flex items-center gap-2"
           >
             <LogOut size={18} />
             Log Out
-          </Button>
+          </StandardBeigeButton>
         </div>
       </header>
 
@@ -213,11 +211,9 @@ export function HomePage() {
 
             <div className="flex gap-3 justify-center">
               <FreeVibzButton onVibzAdded={handleVibzAdded} />
-              <Button
-                variant="primary"
+              <StandardRedButton
                 onClick={handleBuyVibz}
                 disabled={checkoutLoading}
-                className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {checkoutLoading ? (
                   <>
@@ -227,7 +223,7 @@ export function HomePage() {
                 ) : (
                   'Buy $VIBZ'
                 )}
-              </Button>
+              </StandardRedButton>
             </div>
           </div>
         </div>
@@ -271,11 +267,10 @@ export function HomePage() {
             </div>
           )}
 
-          <Button
-            variant="primary"
+          <StandardRedButton
             onClick={handleSaveProfile}
             disabled={saveLoading}
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3"
           >
             {saveLoading ? (
               <>
@@ -288,7 +283,7 @@ export function HomePage() {
                 Save Profile
               </>
             )}
-          </Button>
+          </StandardRedButton>
 
         </div>
 

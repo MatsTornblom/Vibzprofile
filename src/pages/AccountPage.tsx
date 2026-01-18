@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ArrowLeft, User, Mail, Calendar, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
+import { StandardBeigeButton } from '../components/ui/StandardBeigeButton';
+import { StandardRedButton } from '../components/ui/StandardRedButton';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 
 export function AccountPage() {
@@ -62,13 +64,12 @@ export function AccountPage() {
             </div>
 
             <div className="flex justify-center">
-              <Button 
-                variant="secondary" 
+              <StandardBeigeButton
                 onClick={() => window.open('https://enter.vibz.world/', '_blank')}
               >
                 <ExternalLink size={16} />
                 Manage Account
-              </Button>
+              </StandardBeigeButton>
             </div>
           </div>
         ) : (
@@ -80,13 +81,12 @@ export function AccountPage() {
                 You need to be signed in to access this application
               </p>
               
-              <Button 
-                variant="primary" 
+              <StandardRedButton
                 onClick={() => window.open('https://check.vibz.world/', '_blank')}
               >
                 <ExternalLink size={16} />
                 Test Authentication
-              </Button>
+              </StandardRedButton>
             </div>
           </div>
         )}

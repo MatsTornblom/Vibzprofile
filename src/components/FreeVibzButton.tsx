@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Loader2, Gift } from 'lucide-react';
+import { StandardRedButton } from './ui/StandardRedButton';
+import { StandardBeigeButton } from './ui/StandardBeigeButton';
 import { supabase } from '../lib/api/supabase';
 
 interface FreeVibzButtonProps {
@@ -101,17 +103,15 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
             </p>
 
             <div className="flex gap-3 justify-center">
-              <button
+              <StandardBeigeButton
                 onClick={() => setShowPopup(false)}
                 disabled={isLoading}
-                className="bg-white/10 hover:bg-white/20 text-white py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
               >
                 Cancel
-              </button>
-              <button
+              </StandardBeigeButton>
+              <StandardRedButton
                 onClick={handleConfirm}
                 disabled={isLoading}
-                className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-6 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -121,7 +121,7 @@ export function FreeVibzButton({ onVibzAdded }: FreeVibzButtonProps) {
                 ) : (
                   'Add $VIBZ'
                 )}
-              </button>
+              </StandardRedButton>
             </div>
           </div>
         </div>
