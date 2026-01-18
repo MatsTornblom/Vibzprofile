@@ -41,9 +41,10 @@
 
 @font-face {
   font-family: 'Deaugusta';
-  src: url('/fonts/Deaugusta.ttf') format('truetype');
-  font-weight: normal;
+  src: url('/fonts/deaugusta.ttf') format('truetype');
+  font-weight: 100 900; /* This allows all font weights */
   font-style: normal;
+  font-display: swap;
 }
 
 body {
