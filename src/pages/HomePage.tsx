@@ -141,11 +141,11 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-vibz-bg text-vibz-red">
+    <div className="min-h-screen bg-vibz-bg text-vibz-red text-sm">
       {/* Header */}
       <header className="border-b border-vibz-red/10 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4 text-5xl">
+          <div className="flex items-center gap-4">
             <StandardRedButton
               onClick={() => window.location.href = 'https://love.vibz.world'}
             >
