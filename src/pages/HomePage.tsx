@@ -148,7 +148,7 @@ export function HomePage() {
           <div className="flex items-center gap-4">
             <StandardRedButton
               onClick={() => window.location.href = 'https://love.vibz.world'}
-                className="text-sm" // or text-xl, text-2xl, text-sm, etc.
+                className="text-3xl" // or text-xl, text-2xl, text-sm, etc.
             >
               <ArrowLeft size={18} />
               Spread love
