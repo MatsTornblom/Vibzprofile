@@ -151,7 +151,7 @@ export function HomePage() {
               <ArrowLeft size={18} />
               Spread love
             </StandardRedButton>
-            <h1 className="text-5xl font-thin text-vibz-textbox-text font-deaugusta text-center pt-10">Vibz World Citizenship</h1>
+            <h1 className="text-2xl font-thin text-vibz-textbox-text font-deaugusta text-center pt-10">Vibz World Citizenship</h1>
           </div>
           <StandardBeigeButton
             onClick={() => window.location.href = 'https://enter.vibz.world/logout'}
