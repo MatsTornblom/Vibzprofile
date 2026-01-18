@@ -6,6 +6,8 @@ export default {
       fontFamily: {
         cassandra: ['Cassandra', 'serif'],
         'libre-bodoni': ['Libre Bodoni', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        deaugusta: ['Deaugusta', 'serif'],
       },
       colors: {
         vibz: {
@@ -21,7 +23,20 @@ export default {
             800: '#9d174d',
             900: '#831843',
           }
-        }
+        },
+        'vibz-button-red': {
+          DEFAULT: '#DC2727',
+          hover: '#B91C1C',
+        },
+        'vibz-button-beige': {
+          DEFAULT: '#FFEFB3',
+          hover: '#FFF5CF',
+        },
+        'vibz-red': '#DC2727',
+        'vibz-textbox-text': '#DC2727',
+        'vibz-frame': '#DC2727',
+        'vibz-bg': '#FFF5CF',
+        'vibz-bg-textbox': '#FFEFB3',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',
