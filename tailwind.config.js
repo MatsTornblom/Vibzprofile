@@ -4,10 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        cassandra: ['Cassandra', 'serif'],
-        'libre-bodoni': ['Libre Bodoni', 'serif'],
-        poppins: ['Poppins', 'sans-serif'],
+                poppins: ['Poppins', 'sans-serif'],
         deaugusta: ['Deaugusta', 'serif'],
+        cassandra: ['Cassandra', 'serif'],
       },
       colors: {
         vibz: {
