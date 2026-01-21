@@ -20,7 +20,7 @@ export function CancelPage() {
 
         <h1 className="text-4xl font-poppins font-bold text-vibz-red">Payment Cancelled</h1>
 
-        <p className="text-vibz-red/80 text-lg font-poppins ">
+        <p className="text-vibz-red/80 text-lg font-poppins">
           Your payment was cancelled. No charges were made.
         </p>
 
