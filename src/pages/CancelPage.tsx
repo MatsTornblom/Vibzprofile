@@ -18,19 +18,19 @@ export function CancelPage() {
       <div className="max-w-md mx-auto text-center space-y-6">
         <XCircle className="w-20 h-20 text-vibz-red mx-auto" />
 
-        <h1 className="text-4xl font-bold text-vibz-red">Payment Cancelled</h1>
+        <h1 className="text-4xl font-poppins font-bold text-vibz-red">Payment Cancelled</h1>
 
-        <p className="text-vibz-red/80 text-lg">
+        <p className="text-vibz-red/80 text-lg font-poppins ">
           Your payment was cancelled. No charges were made.
         </p>
 
-        <div className="text-vibz-red/60 text-sm">
+        <div className="text-vibz-red/60 text-sm font-poppins">
           Redirecting to dashboard in 5 seconds...
         </div>
 
         <a
           href="/"
-          className="inline-block text-vibz-red hover:text-vibz-button-red-hover underline"
+          className="inline-block font-poppins text-vibz-red hover:text-vibz-button-red-hover underline"
         >
           Return to Dashboard
         </a>
