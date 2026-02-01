@@ -73,26 +73,13 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 
 export async function addFreeVibz(userId: string, amount: number = 100): Promise<boolean> {
   try {
-    const { data: currentUser, error: fetchError } = await supabase
-      .from('users')
-      .select('vibz_balance')
-      .eq('id', userId)
-      .maybeSingle();
+    const { error } = await supabase.rpc('increment_vibz_balance', {
+      user_id: userId,
+      amount: amount
+    });
 
-    if (fetchError || !currentUser) {
-      console.error('Failed to fetch current balance:', fetchError);
-      return false;
-    }
-
-    const newBalance = (currentUser.vibz_balance || 0) + amount;
-
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ vibz_balance: newBalance })
-      .eq('id', userId);
-
-    if (updateError) {
-      console.error('Failed to update balance:', updateError);
+    if (error) {
+      console.error('Failed to add free VIBZ:', error);
       return false;
     }
 
