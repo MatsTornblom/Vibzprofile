@@ -22,7 +22,8 @@ const cookieStorage = {
       domain: '.' + window.location.hostname.split('.').slice(-2).join('.'),
       sameSite: 'lax',
       path: '/',
-      secure: true
+      secure: true,
+      expires: 365
     });
   },
   removeItem: (key: string) => {
