@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Loader2, Save, LogOut, ArrowLeft } from 'lucide-react';
+import { Camera, Loader2, Save, LogOut, ArrowLeft, Pencil } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { StandardInputBox } from '../components/ui/StandardInputBox';
@@ -7,6 +7,7 @@ import { StandardBeigeButton } from '../components/ui/StandardBeigeButton';
 import { StandardRedButton } from '../components/ui/StandardRedButton';
 import { FreeVibzButton } from '../components/FreeVibzButton';
 import { BuyVibzButton } from '../components/BuyVibzButton';
+import { EditProfileModal } from '../components/EditProfileModal';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { isDevEnvironment } from '../lib/browser';
 import { createCheckoutSession } from '../lib/api/stripe';
@@ -25,6 +26,7 @@ export function HomePage() {
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [saveSuccess, setSaveSuccess] = React.useState(false);
   const [uploadingImage, setUploadingImage] = React.useState(false);
+  const [editModalOpen, setEditModalOpen] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleBuyVibz = async () => {
@@ -203,7 +205,7 @@ export function HomePage() {
 
           {/* VIBZ Balance */}
           <div className="text-center mb-6">
-            <p className="text-vibz-red/60 mb-2 font-poppins" >$VIBZ Balance</p>
+            <p className="text-vibz-red/60 mb-2 font-climate tracking-wide text-sm">$VIBZ Balance</p>
             <p className="text-5xl font-bold font-poppins mb-4 text-vibz-red">{vibzBalance}</p>
 
             {checkoutError && (
@@ -278,6 +280,17 @@ export function HomePage() {
 
         </div>
 
+        {/* Edit Profile Button */}
+        <div className="mb-8">
+          <StandardRedButton
+            onClick={() => setEditModalOpen(true)}
+            className="w-full py-3"
+          >
+            <Pencil size={18} />
+            Edit Profile
+          </StandardRedButton>
+        </div>
+
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-vibz-button-beige backdrop-blur-sm rounded-xl p-6 border border-vibz-red/10">
@@ -296,6 +309,14 @@ export function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        user={user}
+        onSaved={refreshUser}
+      />
     </div>
   );
 }

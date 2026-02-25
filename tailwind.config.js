@@ -7,6 +7,7 @@ export default {
         poppins: ['Poppins', 'sans-serif'],
         deaugusta: ['Deaugusta', 'serif'],
         cassandra: ['Cassandra', 'serif'],
+        climate: ['ClimateCrisis', 'sans-serif'],
       },
       colors: {
         vibz: {

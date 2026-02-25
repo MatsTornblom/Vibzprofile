@@ -1,0 +1,165 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.chat_messages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  vibe_share_id text NOT NULL,
+  user_id uuid NOT NULL,
+  username text NOT NULL,
+  message_text text NOT NULL CHECK (char_length(message_text) <= 500),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  read_at timestamp with time zone,
+  CONSTRAINT chat_messages_pkey PRIMARY KEY (id),
+  CONSTRAINT chat_messages_vibe_share_id_fkey FOREIGN KEY (vibe_share_id) REFERENCES public.saved_pages(share_id)
+);
+CREATE TABLE public.chat_notification_log (
+  vibe_share_id text NOT NULL,
+  last_notified_at timestamp with time zone NOT NULL DEFAULT now(),
+  last_chatter_username text,
+  notify_user_ids ARRAY DEFAULT '{}'::uuid[],
+  CONSTRAINT chat_notification_log_pkey PRIMARY KEY (vibe_share_id)
+);
+CREATE TABLE public.chat_participants (
+  vibe_share_id text NOT NULL,
+  user_id uuid NOT NULL,
+  username text NOT NULL,
+  joined_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT chat_participants_pkey PRIMARY KEY (vibe_share_id, user_id)
+);
+CREATE TABLE public.image_templates (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  description text,
+  prompt_text text NOT NULL,
+  example_image_url text NOT NULL,
+  category text,
+  tags ARRAY,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT image_templates_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.images (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  url text NOT NULL,
+  original_url text,
+  hash text,
+  reference_count integer DEFAULT 1,
+  metadata jsonb DEFAULT '{}'::jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  user_id uuid,
+  is_public boolean NOT NULL DEFAULT true,
+  prompt text DEFAULT ''::text,
+  image_template_id uuid,
+  kawaiiboost_checked boolean DEFAULT false,
+  CONSTRAINT images_pkey PRIMARY KEY (id),
+  CONSTRAINT images_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT images_image_template_id_fkey FOREIGN KEY (image_template_id) REFERENCES public.image_templates(id)
+);
+CREATE TABLE public.music_tracks (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  artist text NOT NULL,
+  file_url text,
+  duration integer,
+  status text DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])),
+  metadata jsonb DEFAULT '{}'::jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  type text,
+  user_id uuid DEFAULT auth.uid(),
+  CONSTRAINT music_tracks_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.push_tokens (
+  user_id uuid NOT NULL,
+  expo_push_token text NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT push_tokens_pkey PRIMARY KEY (user_id),
+  CONSTRAINT push_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.saved_pages (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  image_url text NOT NULL,
+  overlay_text text,
+  created_at timestamp with time zone DEFAULT now(),
+  share_id text NOT NULL UNIQUE,
+  image_prompt text NOT NULL DEFAULT ''::text,
+  text_prompt text NOT NULL DEFAULT ''::text,
+  music_track_id uuid,
+  api_credit_cost smallint,
+  image_id uuid,
+  hidden boolean NOT NULL DEFAULT false,
+  user_id uuid,
+  effect text,
+  rewarded_users jsonb DEFAULT '{}'::jsonb,
+  image_template_id uuid,
+  first_view_by text,
+  view_count integer,
+  CONSTRAINT saved_pages_pkey PRIMARY KEY (id),
+  CONSTRAINT saved_pages_image_id_fkey FOREIGN KEY (image_id) REFERENCES public.images(id),
+  CONSTRAINT saved_pages_music_track_id_fkey FOREIGN KEY (music_track_id) REFERENCES public.music_tracks(id),
+  CONSTRAINT saved_pages_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT saved_pages_image_template_id_fkey FOREIGN KEY (image_template_id) REFERENCES public.image_templates(id)
+);
+CREATE TABLE public.stripe_customers (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_id uuid NOT NULL UNIQUE,
+  customer_id text NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone,
+  CONSTRAINT stripe_customers_pkey PRIMARY KEY (id),
+  CONSTRAINT stripe_customers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.stripe_orders (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  checkout_session_id text NOT NULL,
+  payment_intent_id text NOT NULL,
+  customer_id text NOT NULL,
+  amount_subtotal bigint NOT NULL,
+  amount_total bigint NOT NULL,
+  currency text NOT NULL,
+  payment_status text NOT NULL,
+  status USER-DEFINED NOT NULL DEFAULT 'pending'::stripe_order_status,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone,
+  CONSTRAINT stripe_orders_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.stripe_subscriptions (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  customer_id text NOT NULL UNIQUE,
+  subscription_id text,
+  price_id text,
+  current_period_start bigint,
+  current_period_end bigint,
+  cancel_at_period_end boolean DEFAULT false,
+  payment_method_brand text,
+  payment_method_last4 text,
+  status USER-DEFINED NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  deleted_at timestamp with time zone,
+  CONSTRAINT stripe_subscriptions_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.users (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  username text,
+  wallet_address text,
+  profile_image_url text,
+  messages_sent integer DEFAULT 0,
+  messages_received integer DEFAULT 0,
+  pending_messages integer DEFAULT 0,
+  vibz_balance numeric DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  email text UNIQUE,
+  last_sign_in_at timestamp with time zone,
+  raw_app_meta_data jsonb DEFAULT '{}'::jsonb,
+  raw_user_meta_data jsonb DEFAULT '{}'::jsonb,
+  is_super_admin boolean DEFAULT false,
+  rewardpoints integer DEFAULT 0,
+  latest_reward_amount integer DEFAULT 0,
+  CONSTRAINT users_pkey PRIMARY KEY (id)
+);
